@@ -1,0 +1,77 @@
+@file:OptIn(ExperimentalJsExport::class)
+
+package com.jeffrey.auctionbridge.bridge
+
+import com.jeffrey.auctionbridge.feature.map.MapViewModel
+import com.jeffrey.auctionbridge.feature.map.controller.LatLng
+import com.jeffrey.auctionbridge.feature.map.controller.MapController
+import com.jeffrey.auctionbridge.feature.map.state.zoomToKakaoLevel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+
+/**
+ * MapViewModel 의 JS-친화 래퍼.
+ *
+ * - subscribe(callback) 으로 상태 변경 구독
+ * - onMapReady(moveHandler) 로 React 의 카메라 이동 함수를 VM 에 연결 (MapController 인터페이스 익명 구현)
+ * - onMarkerClick / onMyLocationClick / onZoomIn / onZoomOut / clearSelection / onLocationPermissionGranted 로 액션 전달
+ */
+@JsExport
+class MapViewModelJs internal constructor(
+    private val vm: MapViewModel,
+) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    fun subscribe(onState: (MapUiStateDto) -> Unit): () -> Unit {
+        val job: Job = scope.launch {
+            vm.uiState.collect { state -> onState(state.toDto()) }
+        }
+        return { job.cancel() }
+    }
+
+    /**
+     * React 측 map 이 ready 되면 호출.
+     * @param moveHandler (lat, lng, kakaoLevel, animate) — kakaoLevel 0 이면 줌 변경 없이 panTo.
+     */
+    fun onMapReady(moveHandler: (Double, Double, Int, Boolean) -> Unit) {
+        val controller = object : MapController {
+            override fun moveTo(latLng: LatLng, zoom: Int?, animate: Boolean) {
+                val level = if (zoom != null) zoomToKakaoLevel(zoom) else 0
+                moveHandler(latLng.latitude, latLng.longitude, level, animate)
+            }
+        }
+        vm.onMapReady(controller)
+    }
+
+    fun onMarkerClick(itemId: String) {
+        vm.onMarkerClick(itemId)
+    }
+
+    fun onMyLocationClick() {
+        vm.onMyLocationClick()
+    }
+
+    fun onZoomIn() {
+        vm.onZoomIn()
+    }
+
+    fun onZoomOut() {
+        vm.onZoomOut()
+    }
+
+    fun clearSelection() {
+        vm.clearSelection()
+    }
+
+    fun onLocationPermissionGranted() {
+        vm.onLocationPermissionGranted()
+    }
+
+    fun dispose() {
+        scope.cancel()
+    }
+}

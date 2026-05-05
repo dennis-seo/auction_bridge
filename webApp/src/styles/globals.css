@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: #0d1b2a;
+  color: #ffffff;
+  font-family: "Spoqa Han Sans Neo", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Kakao Maps CustomOverlay 말풍선 — 카테고리(앰버) + 가격(흰색), 검정 그림자 */
+.auction-bubble {
+  display: inline-block;
+  padding: 5px 10px 6px;
+  border-radius: 14px;
+  background: #1565c0;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transform: translateY(-6px);
+  text-align: center;
+  line-height: 1.15;
+  position: relative;
+}
+.auction-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #1565c0;
+}
+.auction-bubble-category {
+  color: #ffd740;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.85),
+    0 0 1px rgba(0, 0, 0, 0.65);
+}
+.auction-bubble-price {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 1px;
+  text-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.7),
+    0 0 1px rgba(0, 0, 0, 0.5);
+}
