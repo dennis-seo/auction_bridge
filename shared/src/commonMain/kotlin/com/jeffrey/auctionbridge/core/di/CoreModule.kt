@@ -4,6 +4,7 @@ import com.jeffrey.auctionbridge.core.data.MockAuctionRepository
 import com.jeffrey.auctionbridge.core.data.RemoteAuctionRepository
 import com.jeffrey.auctionbridge.core.domain.repository.AuctionRepository
 import com.jeffrey.auctionbridge.core.network.AuctionApi
+import com.jeffrey.auctionbridge.feature.detail.DetailViewModel
 import com.jeffrey.auctionbridge.feature.main.MainViewModel
 import com.jeffrey.auctionbridge.feature.map.MapViewModel
 import org.koin.core.module.dsl.factoryOf
@@ -27,6 +28,12 @@ internal val featureModule = module {
             categoryId = categoryId,
             auctionRepository = get(),
             locationProvider = get(),
+        )
+    }
+    factory { (itemId: String) ->
+        DetailViewModel(
+            itemId = itemId,
+            auctionRepository = get(),
         )
     }
 }

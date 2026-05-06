@@ -62,13 +62,6 @@ internal fun AuctionMiniCard(
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
             )
-            if (item.areaSquareMeter > 0.0) {
-                Text(
-                    text = "전용 ${item.areaSquareMeter}㎡",
-                    fontSize = 13.sp,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                )
-            }
 
             // 서버 응답에서 들어온 부가 정보 — 있는 것만 골라 한 줄씩.
             val appraisal = item.appraisalText()

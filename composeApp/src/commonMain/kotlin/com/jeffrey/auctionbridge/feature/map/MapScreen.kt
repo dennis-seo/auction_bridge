@@ -37,6 +37,7 @@ fun MapScreen(
     val title = remember(categoryId) {
         when (AuctionCategory.fromId(categoryId)) {
             AuctionCategory.APARTMENT -> "아파트 지도"
+            AuctionCategory.VILLA -> "빌라/연립 지도"
             AuctionCategory.CAR -> "자동차 지도"
             AuctionCategory.OFFICE_TEL -> "오피스텔 지도"
             AuctionCategory.HOUSE -> "주택 지도"
@@ -46,16 +47,23 @@ fun MapScreen(
         }
     }
 
-    val markers = remember(uiState.items) {
-        uiState.items.map { item ->
-            MapMarker(
-                id = item.id,
-                position = LatLng(item.latitude, item.longitude),
-                categoryLabel = item.category.displayName,
-                priceLabel = item.priceText,
-                subInfo = item.markerSubInfo(),
-            )
+    val markers = remember(uiState.items, uiState.clusterMode) {
+        if (uiState.clusterMode) {
+            emptyList()
+        } else {
+            uiState.items.map { item ->
+                MapMarker(
+                    id = item.id,
+                    position = LatLng(item.latitude, item.longitude),
+                    categoryLabel = item.category.displayName,
+                    priceLabel = item.priceText,
+                    subInfo = item.markerSubInfo(),
+                )
+            }
         }
+    }
+    val clusters = remember(uiState.clusters, uiState.clusterMode) {
+        if (uiState.clusterMode) uiState.clusters else emptyList()
     }
 
     RequestLocationPermissionOnce { granted ->
@@ -67,7 +75,10 @@ fun MapScreen(
             modifier = Modifier.fillMaxSize(),
             cameraState = uiState.cameraState,
             markers = markers,
+            clusters = clusters,
             onMarkerClick = { marker -> viewModel.onMarkerClick(marker.id) },
+            onClusterClick = viewModel::onClusterClick,
+            onZoomChanged = viewModel::onMapZoomChanged,
             onMapReady = viewModel::onMapReady,
         )
 

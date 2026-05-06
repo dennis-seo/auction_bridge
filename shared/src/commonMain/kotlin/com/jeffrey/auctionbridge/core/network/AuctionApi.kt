@@ -1,5 +1,6 @@
 package com.jeffrey.auctionbridge.core.network
 
+import com.jeffrey.auctionbridge.core.network.dto.AuctionDetailDto
 import com.jeffrey.auctionbridge.core.network.dto.AuctionListResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -50,6 +51,10 @@ class AuctionApi(
             parameter("limit", limit)
         }.body()
     }
+
+    /** GET /api/v1/auctions/{id} — 매물 상세. */
+    suspend fun getAuction(id: String): AuctionDetailDto =
+        client.get("${baseUrl.value}/api/v1/auctions/$id").body()
 }
 
 internal fun defaultClient(): HttpClient = HttpClient {

@@ -57,9 +57,6 @@ export function AuctionDetailPanel({ item, onClose, onDetail }: Props) {
       </h2>
 
       <p className="mt-2 text-sm text-white/85">{item.address}</p>
-      {item.areaSquareMeter > 0 && (
-        <p className="mt-1 text-xs text-white/50">전용 {item.areaSquareMeter}㎡</p>
-      )}
 
       {hasMeta && (
         <dl className="mt-4 grid grid-cols-3 gap-3 rounded-lg bg-white/5 p-3">

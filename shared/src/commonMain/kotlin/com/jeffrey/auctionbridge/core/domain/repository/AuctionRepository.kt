@@ -1,6 +1,7 @@
 package com.jeffrey.auctionbridge.core.domain.repository
 
 import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
+import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
 import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
 import com.jeffrey.auctionbridge.core.domain.model.CategoryInfo
 import kotlinx.coroutines.flow.Flow
@@ -17,4 +18,10 @@ interface AuctionRepository {
 
     /** 카테고리별 매물 리스트(좌표 포함)를 스트림으로 제공. */
     fun getAuctionItems(category: AuctionCategory): Flow<List<AuctionItem>>
+
+    /**
+     * 매물 상세를 단발성 호출로 가져온다.
+     * @throws Exception 네트워크/직렬화 오류 — ViewModel 측에서 잡아 UI 상태에 반영.
+     */
+    suspend fun getAuctionDetail(id: String): AuctionDetail
 }

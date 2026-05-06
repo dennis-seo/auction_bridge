@@ -1,11 +1,13 @@
 package com.jeffrey.auctionbridge.core.data
 
 import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
+import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
 import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
 import com.jeffrey.auctionbridge.core.domain.model.CategoryInfo
 import com.jeffrey.auctionbridge.core.domain.repository.AuctionRepository
 import com.jeffrey.auctionbridge.core.network.AuctionApi
 import com.jeffrey.auctionbridge.core.network.dto.AuctionListItemDto
+import com.jeffrey.auctionbridge.core.network.dto.toDomain
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -23,6 +25,11 @@ class RemoteAuctionRepository(
 ) : AuctionRepository {
 
     override fun getCategoryList(): Flow<List<CategoryInfo>> = mock.getCategoryList()
+
+    override suspend fun getAuctionDetail(id: String): AuctionDetail {
+        return runCatching { api.getAuction(id).toDomain() }
+            .getOrElse { mock.getAuctionDetail(id) }
+    }
 
     override fun getAuctionItems(category: AuctionCategory): Flow<List<AuctionItem>> = flow {
         val propertyCategory = serverPropertyCategory(category)
@@ -66,6 +73,7 @@ class RemoteAuctionRepository(
 
         fun serverPropertyCategory(category: AuctionCategory): String? = when (category) {
             AuctionCategory.APARTMENT -> "apartment"
+            AuctionCategory.VILLA -> "villa"
             AuctionCategory.OFFICE_TEL -> "officetel"
             AuctionCategory.HOUSE -> "house"
             AuctionCategory.STORE -> "commercial"
@@ -96,13 +104,11 @@ private fun AuctionListItemDto.toDomainOrNull(category: AuctionCategory): Auctio
         latitude = lat,
         longitude = lng,
         address = address ?: title ?: "",
-        areaSquareMeter = bldSqms ?: landSqms ?: 0.0,
         appraisalPrice = appraisalPrice,
         minBidPrice = minBidPrice,
         bidEndAt = bidEndAt,
         status = status,
         thumbnailUrl = thumbnailUrl,
-        propertyCategory = propertyCategory,
     )
 }
 

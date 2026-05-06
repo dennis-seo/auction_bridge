@@ -14,7 +14,6 @@ data class AuctionItem(
     val latitude: Double,
     val longitude: Double,
     val address: String,
-    val areaSquareMeter: Double,
     // ---- 서버 연동 시 채워지는 부가 정보 ----
     /** 감정가 (원). 없으면 null. */
     val appraisalPrice: Long? = null,
@@ -26,6 +25,4 @@ data class AuctionItem(
     val status: String? = null,
     /** 썸네일 URL (없으면 null). */
     val thumbnailUrl: String? = null,
-    /** 서버 property_category 원본 — apartment / villa / officetel ... */
-    val propertyCategory: String? = null,
 )

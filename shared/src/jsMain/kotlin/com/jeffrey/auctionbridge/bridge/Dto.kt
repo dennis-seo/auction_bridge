@@ -69,7 +69,6 @@ class AuctionItemDto internal constructor(
     val latitude: Double,
     val longitude: Double,
     val address: String,
-    val areaSquareMeter: Double,
     // ---- 서버 연동 시 채워지는 부가 표시 ----
     val appraisalText: String?,        // "1.2억" 또는 null
     val minBidText: String?,           // "0.8억" 또는 null
@@ -81,6 +80,14 @@ class AuctionItemDto internal constructor(
 )
 
 @JsExport
+class AuctionClusterDto internal constructor(
+    val cityKey: String,
+    val centerLat: Double,
+    val centerLng: Double,
+    val itemCount: Int,
+)
+
+@JsExport
 class MapUiStateDto internal constructor(
     val items: Array<AuctionItemDto>,
     val selectedItem: AuctionItemDto?,
@@ -89,6 +96,10 @@ class MapUiStateDto internal constructor(
     val kakaoLevel: Int,           // 카카오 SDK level 로 변환된 값 — React 가 그대로 setLevel 에 전달
     val isLocationLoading: Boolean,
     val locationFallbackUsed: Boolean,
+    /** 줌아웃 시 시(市) 단위로 묶인 클러스터. clusterMode=false 면 빈 배열. */
+    val clusters: Array<AuctionClusterDto>,
+    /** 현재 클러스터 모드인지 — UI 가 markers vs clusters 분기에 사용. */
+    val clusterMode: Boolean,
 )
 
 internal fun AuctionItem.toDto(): AuctionItemDto = AuctionItemDto(
@@ -100,7 +111,6 @@ internal fun AuctionItem.toDto(): AuctionItemDto = AuctionItemDto(
     latitude = latitude,
     longitude = longitude,
     address = address,
-    areaSquareMeter = areaSquareMeter,
     appraisalText = appraisalText(),
     minBidText = minBidText(),
     bidEndShort = shortBidEndDate(),
@@ -118,4 +128,13 @@ internal fun MapUiState.toDto(): MapUiStateDto = MapUiStateDto(
     kakaoLevel = zoomToKakaoLevel(cameraState.zoom),
     isLocationLoading = isLocationLoading,
     locationFallbackUsed = locationFallbackUsed,
+    clusters = clusters.map {
+        AuctionClusterDto(
+            cityKey = it.cityKey,
+            centerLat = it.centerLat,
+            centerLng = it.centerLng,
+            itemCount = it.itemCount,
+        )
+    }.toTypedArray(),
+    clusterMode = clusterMode,
 )

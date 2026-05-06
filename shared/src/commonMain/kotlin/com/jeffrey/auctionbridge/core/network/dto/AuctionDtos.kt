@@ -18,7 +18,6 @@ data class AuctionListItemDto(
     val id: Long,
     val source: String? = null,
     @SerialName("asset_type") val assetType: String? = null,
-    @SerialName("property_category") val propertyCategory: String? = null,
     val status: String? = null,
     val title: String? = null,
     val address: String? = null,
@@ -32,6 +31,4 @@ data class AuctionListItemDto(
     @SerialName("bid_end_at") val bidEndAt: String? = null,
     @SerialName("thumbnail_url") val thumbnailUrl: String? = null,
     @SerialName("failed_count") val failedCount: Int? = null,
-    @SerialName("land_sqms") val landSqms: Double? = null,
-    @SerialName("bld_sqms") val bldSqms: Double? = null,
 )
