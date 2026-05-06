@@ -1,5 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
 
@@ -8,9 +6,14 @@ val localProperties: Properties = Properties().apply {
     if (file.exists()) file.inputStream().use { load(it) }
 }
 
+/**
+ * 우선순위: local.properties (gitignored) > 환경 변수 > gradle.properties.
+ * 실제 키는 local.properties 에, 팀 공통 placeholder/빈 값은 gradle.properties 에 둔다.
+ */
 fun secret(key: String): String =
     localProperties.getProperty(key)
         ?: providers.environmentVariable(key).orNull
+        ?: providers.gradleProperty(key).orNull
         ?: ""
 
 plugins {
@@ -25,17 +28,6 @@ kotlin {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
-    }
-
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        outputModuleName.set("composeApp")
-        browser {
-            commonWebpackConfig {
-                outputFileName = "composeApp.js"
-            }
-        }
-        binaries.executable()
     }
 
     // iOS targets — uncomment to enable iOS support.
@@ -80,10 +72,6 @@ kotlin {
             api(libs.kakao.map.android)
         }
 
-        wasmJsMain.dependencies {
-            implementation(libs.kotlinx.browser)
-        }
-
         commonTest.dependencies {
             implementation(kotlin("test"))
         }
@@ -97,16 +85,6 @@ dependencies {
 compose.resources {
     publicResClass = true
     packageOfResClass = "com.jeffrey.auctionbridge.resources"
-}
-
-// Web (wasmJs) 리소스 빌드 시 index.html 의 @KAKAO_JS_KEY@ 토큰을 치환
-tasks.matching { it.name == "wasmJsProcessResources" }.configureEach {
-    this as Copy
-    val kakaoJsKey = secret("KAKAO_JS_KEY")
-    inputs.property("kakaoJsKey", kakaoJsKey)
-    filesMatching("index.html") {
-        filter<ReplaceTokens>("tokens" to mapOf("KAKAO_JS_KEY" to kakaoJsKey))
-    }
 }
 
 android {

@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -23,12 +22,6 @@ kotlin {
         generateTypeScriptDefinitions()
     }
 
-    @OptIn(ExperimentalWasmDsl::class)
-    wasmJs {
-        outputModuleName.set("shared")
-        browser()
-    }
-
     // iOS targets — uncomment to enable iOS support.
     // listOf(
     //     iosX64(),
@@ -50,6 +43,12 @@ kotlin {
 
             implementation(libs.koin.core)
             implementation(libs.kotlinx.serialization.json)
+
+            // Ktor (공통)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
 
         androidMain.dependencies {
@@ -58,12 +57,13 @@ kotlin {
             implementation(libs.kotlinx.coroutines.play.services)
             implementation(libs.koin.android)
             implementation(libs.play.services.location)
+            implementation(libs.ktor.client.okhttp)
         }
 
         // jsMain 은 Kotlin/JS 내장 DOM API 사용 — 별도 kotlinx-browser 의존성 불필요
-        val wasmJsMain by getting {
+        val jsMain by getting {
             dependencies {
-                implementation(libs.kotlinx.browser)
+                implementation(libs.ktor.client.js)
             }
         }
 

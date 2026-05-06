@@ -18,7 +18,7 @@ kakaoMap = "2.13.1"
 playServicesLocation = "21.3.0"
 navigationCompose = "2.8.0-alpha10"
 serialization = "1.7.3"
-kotlinxBrowser = "0.3"
+ktor = "3.0.3"
 
 [libraries]
 # Coroutines
@@ -53,8 +53,13 @@ androidx-navigation-compose = { group = "org.jetbrains.androidx.navigation", nam
 # Serialization
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
-# kotlinx.browser (wasmJs/Js DOM)
-kotlinx-browser = { group = "org.jetbrains.kotlinx", name = "kotlinx-browser", version.ref = "kotlinxBrowser" }
+# Ktor — HTTP client (commonMain + per-platform engines)
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-js = { group = "io.ktor", name = "ktor-client-js", version.ref = "ktor" }
 
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" }

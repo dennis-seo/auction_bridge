@@ -1,7 +1,9 @@
 package com.jeffrey.auctionbridge.core.di
 
 import com.jeffrey.auctionbridge.core.data.MockAuctionRepository
+import com.jeffrey.auctionbridge.core.data.RemoteAuctionRepository
 import com.jeffrey.auctionbridge.core.domain.repository.AuctionRepository
+import com.jeffrey.auctionbridge.core.network.AuctionApi
 import com.jeffrey.auctionbridge.feature.main.MainViewModel
 import com.jeffrey.auctionbridge.feature.map.MapViewModel
 import org.koin.core.module.dsl.factoryOf
@@ -10,8 +12,9 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 internal val coreModule = module {
-    // 추후 RemoteAuctionRepository 로 교체 시 이 한 줄만 변경
-    singleOf(::MockAuctionRepository) bind AuctionRepository::class
+    single { AuctionApi(baseUrl = get()) }
+    singleOf(::MockAuctionRepository)
+    single<AuctionRepository> { RemoteAuctionRepository(api = get(), mock = get()) }
 }
 
 internal val featureModule = module {

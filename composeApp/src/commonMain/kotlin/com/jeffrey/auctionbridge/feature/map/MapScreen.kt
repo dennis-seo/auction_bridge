@@ -19,6 +19,7 @@ import com.jeffrey.auctionbridge.feature.map.components.AuctionMiniCard
 import com.jeffrey.auctionbridge.feature.map.components.KakaoMapView
 import com.jeffrey.auctionbridge.feature.map.components.MapControlsOverlay
 import com.jeffrey.auctionbridge.feature.map.components.MapSearchBarOverlay
+import com.jeffrey.auctionbridge.feature.map.markerSubInfo
 import com.jeffrey.auctionbridge.feature.map.state.MapMarker
 import com.jeffrey.auctionbridge.feature.map.controller.LatLng
 import org.koin.compose.viewmodel.koinViewModel
@@ -51,11 +52,8 @@ fun MapScreen(
                 id = item.id,
                 position = LatLng(item.latitude, item.longitude),
                 categoryLabel = item.category.displayName,
-                priceLabel = if (item.failedCount > 0) {
-                    "${item.priceText} / 유찰${item.failedCount}"
-                } else {
-                    item.priceText
-                },
+                priceLabel = item.priceText,
+                subInfo = item.markerSubInfo(),
             )
         }
     }

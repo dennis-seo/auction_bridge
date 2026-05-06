@@ -20,6 +20,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
+import com.jeffrey.auctionbridge.feature.map.appraisalText
+import com.jeffrey.auctionbridge.feature.map.minBidText
+import com.jeffrey.auctionbridge.feature.map.shortBidEndDate
 
 @Composable
 internal fun AuctionMiniCard(
@@ -59,11 +62,30 @@ internal fun AuctionMiniCard(
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
             )
-            Text(
-                text = "전용 ${item.areaSquareMeter}㎡",
-                fontSize = 13.sp,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-            )
+            if (item.areaSquareMeter > 0.0) {
+                Text(
+                    text = "전용 ${item.areaSquareMeter}㎡",
+                    fontSize = 13.sp,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                )
+            }
+
+            // 서버 응답에서 들어온 부가 정보 — 있는 것만 골라 한 줄씩.
+            val appraisal = item.appraisalText()
+            val minBid = item.minBidText()
+            val end = item.shortBidEndDate()
+            if (appraisal != null || minBid != null || end != null) {
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    appraisal?.let { InfoChip(label = "감정가", value = it) }
+                    minBid?.let { InfoChip(label = "최저가", value = it) }
+                    end?.let { InfoChip(label = "마감", value = it) }
+                }
+            }
+
             Spacer(Modifier.height(12.dp))
             Button(
                 onClick = { onDetailClick(item.id) },
@@ -73,5 +95,22 @@ internal fun AuctionMiniCard(
                 Text(text = "상세 보기", fontWeight = FontWeight.SemiBold)
             }
         }
+    }
+}
+
+@Composable
+private fun InfoChip(label: String, value: String) {
+    Column {
+        Text(
+            text = label,
+            fontSize = 11.sp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.55f),
+        )
+        Text(
+            text = value,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
     }
 }

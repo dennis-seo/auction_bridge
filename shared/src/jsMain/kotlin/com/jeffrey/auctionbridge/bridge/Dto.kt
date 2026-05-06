@@ -6,6 +6,10 @@ import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
 import com.jeffrey.auctionbridge.core.domain.model.CategoryInfo
 import com.jeffrey.auctionbridge.feature.main.MainUiState
 import com.jeffrey.auctionbridge.feature.map.MapUiState
+import com.jeffrey.auctionbridge.feature.map.appraisalText
+import com.jeffrey.auctionbridge.feature.map.markerSubInfo
+import com.jeffrey.auctionbridge.feature.map.minBidText
+import com.jeffrey.auctionbridge.feature.map.shortBidEndDate
 import com.jeffrey.auctionbridge.feature.map.state.zoomToKakaoLevel
 
 /**
@@ -65,6 +69,13 @@ class AuctionItemDto internal constructor(
     val longitude: Double,
     val address: String,
     val areaSquareMeter: Double,
+    // ---- 서버 연동 시 채워지는 부가 표시 ----
+    val appraisalText: String?,        // "1.2억" 또는 null
+    val minBidText: String?,           // "0.8억" 또는 null
+    val bidEndShort: String?,          // "12/14" 또는 null
+    val markerSubInfo: String?,        // "마감 12/14 · 유찰 3" 또는 null
+    val status: String?,               // ongoing/sold/...
+    val thumbnailUrl: String?,
 )
 
 @JsExport
@@ -88,6 +99,12 @@ internal fun AuctionItem.toDto(): AuctionItemDto = AuctionItemDto(
     longitude = longitude,
     address = address,
     areaSquareMeter = areaSquareMeter,
+    appraisalText = appraisalText(),
+    minBidText = minBidText(),
+    bidEndShort = shortBidEndDate(),
+    markerSubInfo = markerSubInfo(),
+    status = status,
+    thumbnailUrl = thumbnailUrl,
 )
 
 internal fun MapUiState.toDto(): MapUiStateDto = MapUiStateDto(

@@ -11,6 +11,8 @@ export interface KakaoMarker {
   longitude: number;
   categoryLabel: string;
   priceLabel: string;
+  /** 마감일/유찰 등 보조 정보. 없으면 마커가 2줄로 표시. */
+  subInfo?: string | null;
 }
 
 interface Props {
@@ -104,6 +106,12 @@ export function KakaoMap({ initialCenter, initialKakaoLevel, markers, onMarkerCl
       price.className = "auction-bubble-price";
       price.textContent = m.priceLabel;
       div.append(cat, price);
+      if (m.subInfo) {
+        const sub = document.createElement("div");
+        sub.className = "auction-bubble-sub";
+        sub.textContent = m.subInfo;
+        div.append(sub);
+      }
       div.style.cursor = "pointer";
       div.addEventListener("click", () => onMarkerClickRef.current(m.id));
 

@@ -94,34 +94,44 @@ actual fun KakaoMapView(
             } else false
         }
 
-        // 추가: 새 마커 중 기존에 없는 것 — 2줄 라벨 (카테고리 / 가격)
+        // 추가: 새 마커 중 기존에 없는 것 — 카테고리 / 가격 (+ 선택적 부가정보)
+        // 카테고리: 앰버 + 검정 외곽선 / 가격: 흰색 + 검정 외곽선 / 부가: 옅은 흰색
+        val categoryStyle = LabelTextStyle.from(
+            /* size = */ 22,
+            /* color = */ Color(0xFFFFD740).toArgb(),
+            /* strokeSize = */ 3,
+            /* strokeColor = */ Color.Black.toArgb(),
+        )
+        val priceStyle = LabelTextStyle.from(
+            /* size = */ 28,
+            /* color = */ Color.White.toArgb(),
+            /* strokeSize = */ 3,
+            /* strokeColor = */ Color.Black.toArgb(),
+        )
+        val subStyle = LabelTextStyle.from(
+            /* size = */ 20,
+            /* color = */ Color(0xFFE0E0E0).toArgb(),
+            /* strokeSize = */ 3,
+            /* strokeColor = */ Color.Black.toArgb(),
+        )
         for (marker in markers) {
             if (markerLabels.containsKey(marker.id)) continue
-            // 윗줄: 카테고리 (밝은 앰버 + 검정 외곽선으로 그림자 효과)
-            // 아랫줄: 가격 (흰색 + 검정 외곽선)
-            val categoryStyle = LabelTextStyle.from(
-                /* size = */ 22,
-                /* color = */ Color(0xFFFFD740).toArgb(),
-                /* strokeSize = */ 3,
-                /* strokeColor = */ Color.Black.toArgb(),
-            )
-            val priceStyle = LabelTextStyle.from(
-                /* size = */ 28,
-                /* color = */ Color.White.toArgb(),
-                /* strokeSize = */ 3,
-                /* strokeColor = */ Color.Black.toArgb(),
-            )
-            val styles = map.labelManager?.addLabelStyles(
-                LabelStyles.from(
-                    LabelStyle.from().setTextStyles(categoryStyle, priceStyle),
-                ),
-            ) ?: continue
+            val sub = marker.subInfo
+            val labelStyle = if (sub != null) {
+                LabelStyle.from().setTextStyles(categoryStyle, priceStyle, subStyle)
+            } else {
+                LabelStyle.from().setTextStyles(categoryStyle, priceStyle)
+            }
+            val styles = map.labelManager?.addLabelStyles(LabelStyles.from(labelStyle)) ?: continue
+            val texts = if (sub != null) {
+                LabelTextBuilder().setTexts(marker.categoryLabel, marker.priceLabel, sub)
+            } else {
+                LabelTextBuilder().setTexts(marker.categoryLabel, marker.priceLabel)
+            }
             val options = LabelOptions
                 .from(KakaoLatLng.from(marker.position.latitude, marker.position.longitude))
                 .setStyles(styles)
-                .setTexts(
-                    LabelTextBuilder().setTexts(marker.categoryLabel, marker.priceLabel),
-                )
+                .setTexts(texts)
             val label = layer.addLabel(options) ?: continue
             label.tag = marker.id
             markerLabels[marker.id] = label

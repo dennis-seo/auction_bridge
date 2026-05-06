@@ -39,8 +39,8 @@ export function MapPage() {
       latitude: it.latitude,
       longitude: it.longitude,
       categoryLabel: it.categoryDisplayName,
-      priceLabel:
-        it.failedCount > 0 ? `${it.priceText} / 유찰${it.failedCount}` : it.priceText,
+      priceLabel: it.priceText,
+      subInfo: it.markerSubInfo,
     }));
   }, [state]);
 
