@@ -206,15 +206,21 @@ export function KakaoMap({
   }, [clusters]);
 
   if (error) {
+    const isDev = import.meta.env.DEV;
+    const keySource = isDev
+      ? "webApp/.env.development.local 의 VITE_KAKAO_JS_KEY"
+      : "Vercel Project Settings → Environment Variables 의 VITE_KAKAO_JS_KEY";
+    const domain = isDev
+      ? "http://localhost:8080"
+      : (typeof window !== "undefined" ? window.location.origin : "운영 도메인");
     return (
       <div className="grid h-full place-items-center bg-brand-ink p-6 text-center text-white/85">
         <div>
           <h2 className="text-lg font-semibold">지도를 불러오지 못했습니다</h2>
           <p className="mt-2 text-sm text-white/60">{error}</p>
           <p className="mt-4 text-xs text-white/40">
-            webApp/.env.development.local 의 VITE_KAKAO_JS_KEY 와<br />
-            카카오 디벨로퍼스 → JavaScript 키의 도메인 등록 (http://localhost:8080)
-            을 확인하세요.
+            {keySource} 와<br />
+            카카오 디벨로퍼스 → JavaScript 키의 도메인 등록 ({domain}) 을 확인하세요.
           </p>
         </div>
       </div>
