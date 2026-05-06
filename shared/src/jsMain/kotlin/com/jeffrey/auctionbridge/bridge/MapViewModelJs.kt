@@ -71,6 +71,16 @@ class MapViewModelJs internal constructor(
         vm.onLocationPermissionGranted()
     }
 
+    /** 사용자가 휠/핀치/제스처로 지도 자체에서 줌을 바꿨을 때 호출. */
+    fun onMapZoomChanged(kakaoLevel: Int) {
+        vm.onMapZoomChanged(kakaoLevel)
+    }
+
+    /** 클러스터 말풍선 클릭 — 해당 시 centroid 로 이동 + 줌 인. */
+    fun onClusterClick(cityKey: String) {
+        vm.onClusterClick(cityKey)
+    }
+
     fun dispose() {
         scope.cancel()
     }

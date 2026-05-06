@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMapScreen } from "../shared/hooks";
-import { KakaoMap, type KakaoMarker } from "../components/map/KakaoMap";
+import { KakaoMap, type KakaoCluster, type KakaoMarker } from "../components/map/KakaoMap";
 import { AuctionDetailPanel } from "../components/map/AuctionDetailPanel";
 import { MapControls } from "../components/map/MapControls";
 import { MapSearchBar } from "../components/map/MapSearchBar";
@@ -33,7 +33,7 @@ export function MapPage() {
   );
 
   const markers = useMemo<KakaoMarker[]>(() => {
-    if (!state) return [];
+    if (!state || state.clusterMode) return [];
     return state.items.map((it) => ({
       id: it.id,
       latitude: it.latitude,
@@ -41,6 +41,16 @@ export function MapPage() {
       categoryLabel: it.categoryDisplayName,
       priceLabel: it.priceText,
       subInfo: it.markerSubInfo,
+    }));
+  }, [state]);
+
+  const clusters = useMemo<KakaoCluster[]>(() => {
+    if (!state || !state.clusterMode) return [];
+    return state.clusters.map((c) => ({
+      cityKey: c.cityKey,
+      latitude: c.centerLat,
+      longitude: c.centerLng,
+      count: c.itemCount,
     }));
   }, [state]);
 
@@ -73,7 +83,10 @@ export function MapPage() {
         initialCenter={initialCenter}
         initialKakaoLevel={initialKakaoLevel}
         markers={markers}
+        clusters={clusters}
         onMarkerClick={(id) => vm.onMarkerClick(id)}
+        onClusterClick={(cityKey) => vm.onClusterClick(cityKey)}
+        onZoomChanged={(level) => vm.onMapZoomChanged(level)}
         onReady={handleReady}
       />
 

@@ -69,3 +69,35 @@ body {
   text-shadow:
     0 1px 1px rgba(0, 0, 0, 0.6);
 }
+
+/* 줌아웃 시 시(市) 단위 클러스터 — 원형, 시 이름 + 카운트 */
+.auction-cluster {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 56px;
+  min-height: 56px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(21, 101, 192, 0.92);
+  border: 2px solid rgba(255, 215, 64, 0.85);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  text-align: center;
+  line-height: 1.05;
+  user-select: none;
+}
+.auction-cluster-city {
+  color: #ffd740;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
+}
+.auction-cluster-count {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  margin-top: 1px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}

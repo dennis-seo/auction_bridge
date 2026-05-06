@@ -15,11 +15,27 @@ export interface KakaoMarker {
   subInfo?: string | null;
 }
 
+export interface KakaoCluster {
+  /** 시(市) 단위 그룹 키 — 클릭 콜백에 그대로 전달된다. */
+  cityKey: string;
+  latitude: number;
+  longitude: number;
+  /** 묶인 매물 개수. 말풍선 안에 표시. */
+  count: number;
+}
+
 interface Props {
   initialCenter: { lat: number; lng: number };
   initialKakaoLevel: number;
+  /** 개별 매물 마커 — clusterMode=false 일 때만 그려진다. */
   markers: KakaoMarker[];
+  /** 시 단위 클러스터 — clusterMode=true 일 때만 그려진다. */
+  clusters?: KakaoCluster[];
   onMarkerClick: (id: string) => void;
+  /** 클러스터 말풍선 클릭 — cityKey 를 VM 에 전달. */
+  onClusterClick?: (cityKey: string) => void;
+  /** 사용자가 휠/핀치 등으로 직접 줌을 바꿨을 때 호출 (VM cameraState 동기화용). */
+  onZoomChanged?: (kakaoLevel: number) => void;
   /** map 이 ready 되었을 때 호출. 인자로 카메라 이동 함수 (lat, lng, kakaoLevel, animate) 가 들어옴. */
   onReady: (move: (lat: number, lng: number, kakaoLevel: number, animate: boolean) => void) => void;
 }
@@ -27,21 +43,37 @@ interface Props {
 /**
  * Kakao Maps JS SDK 를 React 컴포넌트로 래핑.
  * - SDK 동적 로드 + map 인스턴스 생성
- * - markers prop 변경 시 CustomOverlay diff (id 기준)
+ * - markers / clusters prop 변경 시 CustomOverlay diff (id 기준)
  * - onReady 로 imperative 카메라 이동 함수를 상위에 전달
+ * - zoom_changed 이벤트를 onZoomChanged 로 위임 (VM 의 클러스터 모드 판정에 사용)
  */
-export function KakaoMap({ initialCenter, initialKakaoLevel, markers, onMarkerClick, onReady }: Props) {
+export function KakaoMap({
+  initialCenter,
+  initialKakaoLevel,
+  markers,
+  clusters,
+  onMarkerClick,
+  onClusterClick,
+  onZoomChanged,
+  onReady,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<KakaoMapInstance | null>(null);
-  // id → overlay 캐시 (markers diff 용)
-  const overlaysRef = useRef<Map<string, KakaoCustomOverlay>>(new Map());
-  // 핸들러를 ref 로 보관 — 클릭 콜백이 latest closure 를 항상 보도록
+  // 개별 매물 overlays — id 키
+  const markerOverlaysRef = useRef<Map<string, KakaoCustomOverlay>>(new Map());
+  // 클러스터 overlays — cityKey 키
+  const clusterOverlaysRef = useRef<Map<string, KakaoCustomOverlay>>(new Map());
+  // 핸들러를 ref 로 보관 — 이벤트 콜백이 latest closure 를 항상 보도록
   const onMarkerClickRef = useRef(onMarkerClick);
   onMarkerClickRef.current = onMarkerClick;
+  const onClusterClickRef = useRef(onClusterClick);
+  onClusterClickRef.current = onClusterClick;
+  const onZoomChangedRef = useRef(onZoomChanged);
+  onZoomChangedRef.current = onZoomChanged;
 
   const [error, setError] = useState<string | null>(null);
 
-  // 1) SDK 로드 + map 생성 (한 번)
+  // 1) SDK 로드 + map 생성 + zoom_changed 리스너 (한 번)
   useEffect(() => {
     let disposed = false;
     loadKakaoMaps()
@@ -63,6 +95,11 @@ export function KakaoMap({ initialCenter, initialKakaoLevel, markers, onMarkerCl
           if (animate) map.panTo(target);
           else map.setCenter(target);
         });
+        // 사용자 줌 변경 → VM 동기화
+        k.event.addListener(map, "zoom_changed", () => {
+          const level = map.getLevel();
+          onZoomChangedRef.current?.(level);
+        });
       })
       .catch((e: Error) => {
         // eslint-disable-next-line no-console
@@ -72,9 +109,10 @@ export function KakaoMap({ initialCenter, initialKakaoLevel, markers, onMarkerCl
 
     return () => {
       disposed = true;
-      // overlays 정리
-      overlaysRef.current.forEach((ov) => ov.setMap(null));
-      overlaysRef.current.clear();
+      markerOverlaysRef.current.forEach((ov) => ov.setMap(null));
+      markerOverlaysRef.current.clear();
+      clusterOverlaysRef.current.forEach((ov) => ov.setMap(null));
+      clusterOverlaysRef.current.clear();
       mapRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,16 +125,14 @@ export function KakaoMap({ initialCenter, initialKakaoLevel, markers, onMarkerCl
     if (!map || !k) return;
 
     const newIds = new Set(markers.map((m) => m.id));
-    // 제거
-    for (const [id, ov] of overlaysRef.current.entries()) {
+    for (const [id, ov] of markerOverlaysRef.current.entries()) {
       if (!newIds.has(id)) {
         ov.setMap(null);
-        overlaysRef.current.delete(id);
+        markerOverlaysRef.current.delete(id);
       }
     }
-    // 추가
     for (const m of markers) {
-      if (overlaysRef.current.has(m.id)) continue;
+      if (markerOverlaysRef.current.has(m.id)) continue;
       const div = document.createElement("div");
       div.className = "auction-bubble";
       const cat = document.createElement("div");
@@ -123,9 +159,51 @@ export function KakaoMap({ initialCenter, initialKakaoLevel, markers, onMarkerCl
         xAnchor: 0.5,
         clickable: true,
       });
-      overlaysRef.current.set(m.id, overlay);
+      markerOverlaysRef.current.set(m.id, overlay);
     }
   }, [markers]);
+
+  // 3) clusters diff — cityKey 기준 추가/제거 (개수가 바뀌면 한번 제거 후 재생성)
+  useEffect(() => {
+    const map = mapRef.current;
+    const k = window.kakao?.maps;
+    if (!map || !k) return;
+    const list = clusters ?? [];
+
+    // 키와 카운트가 함께 일치하는지 확인 — 카운트가 바뀌면 새로 그린다 (DOM textContent 가 더 단순해짐)
+    const newKeys = new Set(list.map((c) => `${c.cityKey}#${c.count}`));
+    for (const [composite, ov] of clusterOverlaysRef.current.entries()) {
+      if (!newKeys.has(composite)) {
+        ov.setMap(null);
+        clusterOverlaysRef.current.delete(composite);
+      }
+    }
+    for (const c of list) {
+      const composite = `${c.cityKey}#${c.count}`;
+      if (clusterOverlaysRef.current.has(composite)) continue;
+      const wrap = document.createElement("div");
+      wrap.className = "auction-cluster";
+      const city = document.createElement("div");
+      city.className = "auction-cluster-city";
+      city.textContent = c.cityKey;
+      const cnt = document.createElement("div");
+      cnt.className = "auction-cluster-count";
+      cnt.textContent = String(c.count);
+      wrap.append(city, cnt);
+      wrap.style.cursor = "pointer";
+      wrap.addEventListener("click", () => onClusterClickRef.current?.(c.cityKey));
+
+      const overlay = new k.CustomOverlay({
+        map,
+        position: new k.LatLng(c.latitude, c.longitude),
+        content: wrap,
+        yAnchor: 0.5,
+        xAnchor: 0.5,
+        clickable: true,
+      });
+      clusterOverlaysRef.current.set(composite, overlay);
+    }
+  }, [clusters]);
 
   if (error) {
     return (

@@ -11,6 +11,7 @@ export {
   type MapViewModelJs,
   type MapUiStateDto,
   type AuctionItemDto,
+  type AuctionClusterDto,
 } from "auctionbridge-shared";
 
 import { createAuctionBridge } from "auctionbridge-shared";

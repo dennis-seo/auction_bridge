@@ -19,3 +19,6 @@ data class MapCameraState(
  * Android/Web actual 모두 카카오 SDK 를 사용하므로 같은 변환 규칙을 따른다.
  */
 fun zoomToKakaoLevel(zoom: Int): Int = (15 - zoom).coerceIn(1, 14)
+
+/** [zoomToKakaoLevel] 의 역변환 — 외부 SDK 가 통보한 level 을 VM 내부 zoom 으로 보정. */
+fun kakaoLevelToZoom(kakaoLevel: Int): Int = (15 - kakaoLevel).coerceIn(1, 14)

@@ -17,6 +17,13 @@ declare global {
           yAnchor?: number;
           clickable?: boolean;
         }) => KakaoCustomOverlay;
+        event: {
+          addListener: (
+            target: KakaoMapInstance,
+            type: string,
+            handler: () => void,
+          ) => void;
+        };
       };
     };
   }
