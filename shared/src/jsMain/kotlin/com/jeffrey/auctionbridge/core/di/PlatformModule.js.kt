@@ -8,6 +8,33 @@ import org.koin.dsl.module
 
 actual val platformModule: Module = module {
     single<LocationProvider> { WebLocationProvider() }
-    // 브라우저는 host 머신을 그대로 localhost 로 본다. 배포 시 빌드타임 치환 또는 별도 config.
-    single { ApiBaseUrl("http://localhost:8000") }
+    single { ApiBaseUrl(resolveApiBaseUrl()) }
 }
+
+/**
+ * 브라우저 globalThis 에 주입된 `__AB_API_BASE_URL__` 을 읽는다.
+ * webApp main.tsx 가 빌드타임 [import.meta.env.VITE_API_BASE_URL] 값을 globalThis 에 셋업.
+ *
+ * 미주입 시 dev 환경 기본값 (`http://localhost:8000`).
+ */
+private const val DEV_DEFAULT = "http://localhost:8000"
+
+private fun resolveApiBaseUrl(): String {
+    val raw = readGlobalApiBaseUrl()
+    return if (raw.isNullOrBlank()) DEV_DEFAULT else raw
+}
+
+@Suppress("UnsafeCastFromDynamic")
+private fun readGlobalApiBaseUrl(): String? =
+    js(
+        """
+        (function () {
+            try {
+                if (typeof globalThis !== 'undefined' && globalThis.__AB_API_BASE_URL__) {
+                    return String(globalThis.__AB_API_BASE_URL__);
+                }
+            } catch (e) {}
+            return null;
+        })()
+        """,
+    ) as String?

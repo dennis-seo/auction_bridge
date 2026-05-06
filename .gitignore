@@ -5,7 +5,9 @@
 local.properties
 .idea/
 /build
-build/
+composeApp/build/
+# shared/build 는 통째로 ignore 하지 않는다 — 아래 negation 으로 production dist 추적.
+shared/build/*
 /captures
 .externalNativeBuild
 .cxx
@@ -24,6 +26,17 @@ kotlin-js-store/
 webApp/node_modules/
 webApp/dist/
 webApp/.env*.local
+
+# shared/JS production library distribution — webApp 의 npm `file:` 의존성으로
+# Vercel 빌드 환경에는 Java/Gradle 이 없으므로 산출물 자체를 git 으로 추적한다.
+# shared/src 변경 시 로컬에서 `./gradlew :shared:jsBrowserProductionLibraryDistribution`
+# 를 실행해 다시 커밋하거나, GitHub Actions(`build-shared-js.yml`) 에 위임할 수 있다.
+!shared/build/dist/
+shared/build/dist/*
+!shared/build/dist/js/
+shared/build/dist/js/*
+!shared/build/dist/js/productionLibrary/
+!shared/build/dist/js/productionLibrary/**
 
 # Misc
 .DS_Store

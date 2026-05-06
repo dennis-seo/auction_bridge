@@ -1,0 +1,60 @@
+name: Build shared/JS production library
+
+# webApp(Vercel) 은 `shared/build/dist/js/productionLibrary` 산출물에 file: 의존한다.
+# Vercel 빌드 환경에는 Java/Gradle 이 없으므로 이 워크플로우가 main 푸시 시
+# 산출물을 자동 빌드해 동일 브랜치에 커밋한다.
+#
+# 무한 루프 방지: paths 필터에 `shared/build/**` 를 포함하지 않으므로
+# 자기 자신이 만든 dist commit 은 다시 트리거되지 않는다.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - shared/src/commonMain/**
+      - shared/src/jsMain/**
+      - shared/build.gradle.kts
+      - gradle/libs.versions.toml
+      - gradle/wrapper/**
+      - gradlew
+      - gradlew.bat
+      - .github/workflows/build-shared-js.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        # 같은 브랜치에 커밋·푸시하기 위해 fetch-depth=0 (full history)
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build shared/JS production library
+        run: ./gradlew :shared:jsBrowserProductionLibraryDistribution -x test --no-daemon
+
+      - name: Commit & push if dist changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: |
+            chore(shared): rebuild JS production library [skip ci]
+
+            shared/src 변경에 따라 자동 재빌드된 dist.
+            webApp(Vercel) 의 file: 의존성을 최신 상태로 유지.
+          file_pattern: shared/build/dist/js/productionLibrary
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
