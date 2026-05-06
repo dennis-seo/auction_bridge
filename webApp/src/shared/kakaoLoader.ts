@@ -1,7 +1,8 @@
 // Kakao Maps JS SDK 동적 로더.
-// 빌드타임 환경변수 VITE_KAKAO_JS_KEY 를 사용해 <script> 태그를 한 번만 주입.
-// - dev: webApp/.env.development.local
-// - prod (Vercel): Project Settings → Environment Variables
+// 빌드타임 환경변수 KAKAO_JS_KEY (또는 dev 호환용 VITE_KAKAO_JS_KEY) 를 사용해
+// <script> 태그를 한 번만 주입. vite.config.ts 의 define 으로 client 번들에 정적 치환.
+// - dev: webApp/.env.development.local 의 KAKAO_JS_KEY 또는 VITE_KAKAO_JS_KEY
+// - prod (Vercel): Project Settings → Environment Variables 의 KAKAO_JS_KEY
 // autoload=false 로 받아오기 → kakao.maps.load() 가 resolve 되면 SDK 사용 가능.
 
 declare global {
@@ -60,10 +61,10 @@ export function loadKakaoMaps(): Promise<void> {
   const key = (import.meta.env.VITE_KAKAO_JS_KEY as string | undefined) ?? "";
   if (!key) {
     const hint = import.meta.env.DEV
-      ? "webApp/.env.development.local 에 VITE_KAKAO_JS_KEY=... 추가 후 dev 서버 재시작"
-      : "Vercel Project Settings → Environment Variables 에 VITE_KAKAO_JS_KEY 등록 후 재배포";
+      ? "webApp/.env.development.local 에 KAKAO_JS_KEY=... 추가 후 dev 서버 재시작"
+      : "Vercel Project Settings → Environment Variables 에 KAKAO_JS_KEY 등록 후 재배포";
     return Promise.reject(
-      new Error(`VITE_KAKAO_JS_KEY 가 설정되지 않았습니다. ${hint}`),
+      new Error(`카카오 JS 키가 설정되지 않았습니다. ${hint}`),
     );
   }
 

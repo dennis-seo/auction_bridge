@@ -46,7 +46,7 @@ npm run preview
 2. **Root Directory**: `webApp` 으로 지정 (모노레포 — `webApp/vercel.json` 의 설정이 적용됨).
 3. **Framework Preset**: Vite (자동 감지).
 4. **Environment Variables** 에 다음 두 개 입력 (`webApp/.env.production.example` 참고):
-   - `VITE_KAKAO_JS_KEY` — 카카오 Maps JavaScript 키
+   - `KAKAO_JS_KEY` — 카카오 Maps JavaScript 키 (`vite.config.ts` 의 `define` 으로 client 번들에 주입됨; 호환을 위해 `VITE_KAKAO_JS_KEY` 도 인식)
    - `VITE_API_BASE_URL` — FastAPI 서버의 절대 URL (예: `https://api.example.com`)
 5. **Deploy** 클릭. main push 마다 자동 재배포된다.
 

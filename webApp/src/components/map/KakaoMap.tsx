@@ -208,8 +208,8 @@ export function KakaoMap({
   if (error) {
     const isDev = import.meta.env.DEV;
     const keySource = isDev
-      ? "webApp/.env.development.local 의 VITE_KAKAO_JS_KEY"
-      : "Vercel Project Settings → Environment Variables 의 VITE_KAKAO_JS_KEY";
+      ? "webApp/.env.development.local 의 KAKAO_JS_KEY"
+      : "Vercel Project Settings → Environment Variables 의 KAKAO_JS_KEY";
     const domain = isDev
       ? "http://localhost:8080"
       : (typeof window !== "undefined" ? window.location.origin : "운영 도메인");
