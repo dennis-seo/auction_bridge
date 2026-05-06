@@ -22,9 +22,9 @@ export function AuctionDetailPanel({ item, onClose, onDetail }: Props) {
           <span className="rounded-full bg-brand-blue40/20 px-2.5 py-0.5 text-xs font-medium text-brand-blue80">
             {item.categoryDisplayName}
           </span>
-          {item.status && (
+          {item.statusLabel && (
             <span className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] font-medium text-white/70">
-              {item.status}
+              {item.statusLabel}
             </span>
           )}
         </div>

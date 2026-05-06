@@ -31,6 +31,25 @@ fun AuctionItem.appraisalText(): String? = appraisalPrice.toEokOrNull()
 fun AuctionItem.minBidText(): String? = minBidPrice.toEokOrNull()
 
 /**
+ * 서버 status(영문 코드)를 사용자에게 보여줄 한국어 라벨로 변환.
+ * - scheduled  → 입찰 예정
+ * - ongoing    → 입찰 진행중
+ * - sold       → 낙찰
+ * - failed     → 유찰
+ * - cancelled  → 취하/취소
+ * 알 수 없는 값은 null (UI 에서 칩 비표시).
+ */
+fun AuctionItem.statusLabel(): String? = when (status?.lowercase()) {
+    "scheduled" -> "입찰 예정"
+    "ongoing" -> "입찰 진행중"
+    "sold" -> "낙찰"
+    "failed" -> "유찰"
+    "cancelled", "canceled" -> "취하"
+    null, "" -> null
+    else -> null
+}
+
+/**
  * 마커 보조 라벨. priceLabel 옆/아래에 작게 노출.
  * 우선순위: 마감임박(마감일 존재) > 유찰 횟수.
  * - 둘 다 있으면 "마감 12/14 · 유찰 3"

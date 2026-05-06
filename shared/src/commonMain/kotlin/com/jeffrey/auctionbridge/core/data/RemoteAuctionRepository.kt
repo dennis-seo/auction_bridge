@@ -109,9 +109,12 @@ private fun AuctionListItemDto.toDomainOrNull(category: AuctionCategory): Auctio
 /**
  * 가격 표시 문자열 — 최저가 우선, 없으면 감정가, 둘 다 없으면 "-".
  * 포맷: 1억 미만은 "0.7억", 이상은 "1.2억"  (천만 단위 1자리).
+ *
+ * 온비드 원본에서 `lowstBidPrcIndctCont` 가 0 으로 내려오는 경우(예정/취하 등)가 있어
+ * 0 도 null 과 동일하게 취급해 감정가로 fallback 한다.
  */
 private fun formatPriceText(minBid: Long?, appraisal: Long?): String {
-    val price = minBid ?: appraisal ?: return "-"
+    val price = minBid?.takeIf { it > 0 } ?: appraisal?.takeIf { it > 0 } ?: return "-"
     val eok = price / 1_0000_0000.0
     val rounded = (eok * 10).toLong() / 10.0
     return "${rounded}억"

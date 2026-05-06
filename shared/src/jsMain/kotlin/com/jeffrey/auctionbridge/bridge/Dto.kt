@@ -10,6 +10,7 @@ import com.jeffrey.auctionbridge.feature.map.appraisalText
 import com.jeffrey.auctionbridge.feature.map.markerSubInfo
 import com.jeffrey.auctionbridge.feature.map.minBidText
 import com.jeffrey.auctionbridge.feature.map.shortBidEndDate
+import com.jeffrey.auctionbridge.feature.map.statusLabel
 import com.jeffrey.auctionbridge.feature.map.state.zoomToKakaoLevel
 
 /**
@@ -74,7 +75,8 @@ class AuctionItemDto internal constructor(
     val minBidText: String?,           // "0.8억" 또는 null
     val bidEndShort: String?,          // "12/14" 또는 null
     val markerSubInfo: String?,        // "마감 12/14 · 유찰 3" 또는 null
-    val status: String?,               // ongoing/sold/...
+    val status: String?,               // ongoing/sold/... (raw)
+    val statusLabel: String?,          // "입찰 예정" / "입찰 진행중" / "낙찰" / "유찰" / "취하"
     val thumbnailUrl: String?,
 )
 
@@ -104,6 +106,7 @@ internal fun AuctionItem.toDto(): AuctionItemDto = AuctionItemDto(
     bidEndShort = shortBidEndDate(),
     markerSubInfo = markerSubInfo(),
     status = status,
+    statusLabel = statusLabel(),
     thumbnailUrl = thumbnailUrl,
 )
 
