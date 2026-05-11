@@ -15,6 +15,31 @@ window.__AB_API_BASE_URL__ =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
   "https://auctionbridge-api-ak2wcqba2q-du.a.run.app";
 
+// 디버깅: 실제로 셋업된 API URL 을 콘솔에 노출.
+// eslint-disable-next-line no-console
+console.info("[AuctionBridge] API base URL:", window.__AB_API_BASE_URL__);
+
+// 디버깅: Ktor 가 호출하는 것과 동일한 엔드포인트를 fetch 로 직접 호출해
+// 네트워크/CORS 자체에 문제가 있는지 즉시 확인. 콘솔에서 결과를 출력.
+(() => {
+  const u = `${window.__AB_API_BASE_URL__}/api/v1/auctions?min_lng=124&min_lat=33&max_lng=132&max_lat=39&asset_type=realty&property_category=apartment&limit=2`;
+  // eslint-disable-next-line no-console
+  console.info("[AuctionBridge] probing:", u);
+  fetch(u, { headers: { accept: "application/json" } })
+    .then(async (r) => {
+      const text = await r.text();
+      // eslint-disable-next-line no-console
+      console.info(
+        "[AuctionBridge] probe status=",
+        r.status,
+        "body[0..160]=",
+        text.slice(0, 160),
+      );
+    })
+    // eslint-disable-next-line no-console
+    .catch((e) => console.error("[AuctionBridge] probe FAILED:", e));
+})();
+
 const root = document.getElementById("root");
 if (!root) throw new Error("Root element #root not found");
 
