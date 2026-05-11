@@ -214,11 +214,6 @@ initMetadataForClass(SendBroadcast, 'SendBroadcast', VOID, VOID, [Waiter]);
 initMetadataForClass(BufferedChannelIterator, 'BufferedChannelIterator', VOID, VOID, [Waiter], [0, 3]);
 initMetadataForCoroutine($sendCOROUTINE$, CoroutineImpl);
 initMetadataForCoroutine($receiveCatchingCOROUTINE$, CoroutineImpl);
-function close$default(cause, $super) {
-  cause = cause === VOID ? null : cause;
-  return $super === VOID ? this.k16(cause) : $super.k16.call(this, cause);
-}
-initMetadataForInterface(SendChannel, 'SendChannel', VOID, VOID, VOID, [1]);
 function cancel$default_0(cause, $super) {
   cause = cause === VOID ? null : cause;
   var tmp;
@@ -231,7 +226,12 @@ function cancel$default_0(cause, $super) {
   return tmp;
 }
 initMetadataForInterface(ReceiveChannel, 'ReceiveChannel', VOID, VOID, VOID, [0]);
-initMetadataForClass(BufferedChannel, 'BufferedChannel', VOID, VOID, [SendChannel, ReceiveChannel], [1, 4, 0, 3]);
+function close$default(cause, $super) {
+  cause = cause === VOID ? null : cause;
+  return $super === VOID ? this.k16(cause) : $super.k16.call(this, cause);
+}
+initMetadataForInterface(SendChannel, 'SendChannel', VOID, VOID, VOID, [1]);
+initMetadataForClass(BufferedChannel, 'BufferedChannel', VOID, VOID, [ReceiveChannel, SendChannel], [1, 4, 0, 3]);
 initMetadataForClass(WaiterEB, 'WaiterEB');
 initMetadataForClass(ReceiveCatching, 'ReceiveCatching', VOID, VOID, [Waiter]);
 initMetadataForObject(Factory, 'Factory');
@@ -241,7 +241,7 @@ initMetadataForCompanion(Companion);
 initMetadataForClass(ChannelResult, 'ChannelResult');
 initMetadataForClass(ClosedSendChannelException, 'ClosedSendChannelException', VOID, IllegalStateException);
 initMetadataForClass(ClosedReceiveChannelException, 'ClosedReceiveChannelException', VOID, NoSuchElementException);
-initMetadataForClass(ChannelCoroutine, 'ChannelCoroutine', VOID, AbstractCoroutine, [AbstractCoroutine, SendChannel, ReceiveChannel], [1, 0]);
+initMetadataForClass(ChannelCoroutine, 'ChannelCoroutine', VOID, AbstractCoroutine, [AbstractCoroutine, ReceiveChannel, SendChannel], [1, 0]);
 initMetadataForClass(ConflatedBufferedChannel, 'ConflatedBufferedChannel', VOID, BufferedChannel, VOID, [1, 0]);
 initMetadataForInterface(ProducerScope, 'ProducerScope', VOID, VOID, [CoroutineScope, SendChannel], [1]);
 initMetadataForClass(ProducerCoroutine, 'ProducerCoroutine', VOID, ChannelCoroutine, [ChannelCoroutine, ProducerScope], [1, 0]);
@@ -279,7 +279,7 @@ initMetadataForLambda(StartedWhileSubscribed$command$slambda_1, CoroutineImpl, V
 initMetadataForClass(StartedWhileSubscribed, 'StartedWhileSubscribed');
 initMetadataForInterface(StateFlow, 'StateFlow', VOID, VOID, VOID, [1]);
 initMetadataForCoroutine($collectCOROUTINE$_3, CoroutineImpl);
-initMetadataForClass(StateFlowImpl, 'StateFlowImpl', VOID, AbstractSharedFlow, [AbstractSharedFlow, StateFlow, FlowCollector, FusibleFlow], [1]);
+initMetadataForClass(StateFlowImpl, 'StateFlowImpl', VOID, AbstractSharedFlow, [AbstractSharedFlow, FlowCollector, StateFlow, FusibleFlow], [1]);
 initMetadataForClass(StateFlowSlot, 'StateFlowSlot', StateFlowSlot, AbstractSharedFlowSlot, VOID, [0]);
 initMetadataForClass(SubscriptionCountStateFlow, 'SubscriptionCountStateFlow', VOID, SharedFlowImpl, [StateFlow, SharedFlowImpl], [1]);
 initMetadataForLambda(ChannelFlow$_get_collectToFun_$slambda_j53z2e, CoroutineImpl, VOID, [1]);

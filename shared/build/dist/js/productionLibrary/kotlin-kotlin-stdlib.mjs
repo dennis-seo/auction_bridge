@@ -48,6 +48,12 @@ if (typeof Math.clz32 === 'undefined') {
     };
   }(Math.log, Math.LN2);
 }
+if (typeof String.prototype.startsWith === 'undefined') {
+  Object.defineProperty(String.prototype, 'startsWith', {value: function (searchString, position) {
+    position = position || 0;
+    return this.lastIndexOf(searchString, position) === position;
+  }});
+}
 if (typeof String.prototype.endsWith === 'undefined') {
   Object.defineProperty(String.prototype, 'endsWith', {value: function (searchString, position) {
     var subjectString = this.toString();
@@ -57,12 +63,6 @@ if (typeof String.prototype.endsWith === 'undefined') {
     position -= searchString.length;
     var lastIndex = subjectString.indexOf(searchString, position);
     return lastIndex !== -1 && lastIndex === position;
-  }});
-}
-if (typeof String.prototype.startsWith === 'undefined') {
-  Object.defineProperty(String.prototype, 'startsWith', {value: function (searchString, position) {
-    position = position || 0;
-    return this.lastIndexOf(searchString, position) === position;
   }});
 }
 //endregion
@@ -3286,9 +3286,6 @@ function listOf(element) {
 function setOf(element) {
   return hashSetOf([element]);
 }
-function mapOf(pair) {
-  return hashMapOf([pair]);
-}
 function mapCapacity(expectedSize) {
   return expectedSize;
 }
@@ -3360,6 +3357,9 @@ function arrayCopy(source, destination, destinationOffset, startIndex, endIndex)
          while (0 <= inductionVariable_0);
     }
   }
+}
+function mapOf(pair) {
+  return hashMapOf([pair]);
 }
 function checkBuilderCapacity(capacity) {
   // Inline function 'kotlin.require' call
@@ -9040,15 +9040,6 @@ protoOf(IndexedValue).equals = function (other) {
     return false;
   return true;
 };
-function flatten(_this__u8e3s4) {
-  var result = ArrayList_init_$Create$();
-  var _iterator__ex2g4s = _this__u8e3s4.j();
-  while (_iterator__ex2g4s.k()) {
-    var element = _iterator__ex2g4s.l();
-    addAll(result, element);
-  }
-  return result;
-}
 function collectionSizeOrDefault(_this__u8e3s4, default_0) {
   var tmp;
   if (isInterface(_this__u8e3s4, Collection)) {
@@ -9072,6 +9063,15 @@ function collectionSizeOrNull(_this__u8e3s4) {
     tmp = null;
   }
   return tmp;
+}
+function flatten(_this__u8e3s4) {
+  var result = ArrayList_init_$Create$();
+  var _iterator__ex2g4s = _this__u8e3s4.j();
+  while (_iterator__ex2g4s.k()) {
+    var element = _iterator__ex2g4s.l();
+    addAll(result, element);
+  }
+  return result;
 }
 function IndexingIterator(iterator) {
   this.lg_1 = iterator;
@@ -9137,12 +9137,6 @@ function toMap(_this__u8e3s4) {
     return tmp;
   }
   return optimizeReadOnlyMap(toMap_1(_this__u8e3s4, LinkedHashMap_init_$Create$()));
-}
-function hashMapOf(pairs) {
-  // Inline function 'kotlin.apply' call
-  var this_0 = HashMap_init_$Create$_0(mapCapacity(pairs.length));
-  putAll(this_0, pairs);
-  return this_0;
 }
 function EmptyMap() {
   EmptyMap_instance = this;
@@ -9246,6 +9240,12 @@ function putAll_0(_this__u8e3s4, pairs) {
     var value = _destruct__k2r9zo.ug();
     _this__u8e3s4.h2(key, value);
   }
+}
+function hashMapOf(pairs) {
+  // Inline function 'kotlin.apply' call
+  var this_0 = HashMap_init_$Create$_0(mapCapacity(pairs.length));
+  putAll(this_0, pairs);
+  return this_0;
 }
 function removeFirstOrNull(_this__u8e3s4) {
   return _this__u8e3s4.p() ? null : _this__u8e3s4.b2(0);
@@ -14005,7 +14005,6 @@ export {
   listOf as listOfvhqybd2zx248,
   listOf_0 as listOf1jh22dvmctj1r,
   mapCapacity as mapCapacity1h45rc3eh9p2l,
-  mapOf as mapOf2zpbbmyqk8xpf,
   mapOf_0 as mapOf1xd03cq9cnmy8,
   mutableListOf as mutableListOf6oorvk2mtdmp,
   plus_3 as plus1ogy4liedzq5j,
