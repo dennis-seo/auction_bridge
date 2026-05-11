@@ -23,22 +23,22 @@ function EventDefinition() {
 function HandlerRegistration() {
 }
 function Events() {
-  this.d3g_1 = new CopyOnWriteHashMap();
+  this.s3h_1 = new CopyOnWriteHashMap();
 }
-protoOf(Events).e3g = function (definition, value) {
+protoOf(Events).t3h = function (definition, value) {
   var exception = null;
-  var tmp0_safe_receiver = this.d3g_1.m30(definition);
+  var tmp0_safe_receiver = this.s3h_1.b32(definition);
   if (tmp0_safe_receiver == null)
     null;
   else {
     // Inline function 'io.ktor.util.internal.LockFreeLinkedListHead.forEach' call
-    var tmp = tmp0_safe_receiver.c11();
+    var tmp = tmp0_safe_receiver.g11();
     var cur = tmp instanceof LockFreeLinkedListNode ? tmp : THROW_CCE();
     while (!equals(cur, tmp0_safe_receiver)) {
       if (cur instanceof HandlerRegistration) {
         var registration = cur;
         try {
-          var tmp_0 = registration.g3g_1;
+          var tmp_0 = registration.v3h_1;
           (typeof tmp_0 === 'function' ? tmp_0 : THROW_CCE())(value);
         } catch ($p) {
           if ($p instanceof Error) {
@@ -60,7 +60,7 @@ protoOf(Events).e3g = function (definition, value) {
           }
         }
       }
-      cur = cur.l31();
+      cur = cur.a33();
     }
   }
   var tmp1_safe_receiver = exception;

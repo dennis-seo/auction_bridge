@@ -40,12 +40,12 @@ function get_viewModelScope(_this__u8e3s4) {
   // Inline function 'kotlin.contracts.contract' call
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronizedImpl' call
   get_VIEW_MODEL_SCOPE_LOCK();
-  var tmp0_elvis_lhs = _this__u8e3s4.p1y('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY');
+  var tmp0_elvis_lhs = _this__u8e3s4.f20('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY');
   var tmp;
   if (tmp0_elvis_lhs == null) {
     // Inline function 'kotlin.also' call
     var this_0 = createViewModelScope();
-    _this__u8e3s4.q1y('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY', this_0);
+    _this__u8e3s4.g20('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY', this_0);
     tmp = this_0;
   } else {
     tmp = tmp0_elvis_lhs;
@@ -60,18 +60,18 @@ function _init_properties_ViewModel_kt__8pkmem() {
   }
 }
 function CloseableCoroutineScope(coroutineContext) {
-  this.r1y_1 = coroutineContext;
+  this.h20_1 = coroutineContext;
 }
-protoOf(CloseableCoroutineScope).tn = function () {
-  return this.r1y_1;
+protoOf(CloseableCoroutineScope).xn = function () {
+  return this.h20_1;
 };
 protoOf(CloseableCoroutineScope).z3 = function () {
-  return cancel(this.r1y_1);
+  return cancel(this.h20_1);
 };
 function createViewModelScope() {
   var tmp;
   try {
-    tmp = Dispatchers_getInstance().kz().ez();
+    tmp = Dispatchers_getInstance().oz().iz();
   } catch ($p) {
     var tmp_0;
     if ($p instanceof NotImplementedError) {
@@ -88,7 +88,7 @@ function createViewModelScope() {
     tmp = tmp_0;
   }
   var dispatcher = tmp;
-  return new CloseableCoroutineScope(dispatcher.rh(SupervisorJob()));
+  return new CloseableCoroutineScope(dispatcher.vh(SupervisorJob()));
 }
 function ViewModelImpl_init_$Init$($this) {
   ViewModelImpl.call($this);
@@ -113,46 +113,46 @@ function closeWithRuntimeException($this, closeable) {
     }
   }
 }
-protoOf(ViewModelImpl).q1y = function (key, closeable) {
-  if (this.v1y_1) {
+protoOf(ViewModelImpl).g20 = function (key, closeable) {
+  if (this.l20_1) {
     closeWithRuntimeException(this, closeable);
     return Unit_instance;
   }
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronized' call
   // Inline function 'kotlin.contracts.contract' call
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronizedImpl' call
-  this.s1y_1;
-  var oldCloseable = this.t1y_1.h2(key, closeable);
+  this.i20_1;
+  var oldCloseable = this.j20_1.h2(key, closeable);
   closeWithRuntimeException(this, oldCloseable);
 };
-protoOf(ViewModelImpl).p1y = function (key) {
+protoOf(ViewModelImpl).f20 = function (key) {
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronized' call
   // Inline function 'kotlin.contracts.contract' call
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronizedImpl' call
-  this.s1y_1;
-  var tmp = this.t1y_1.e2(key);
+  this.i20_1;
+  var tmp = this.j20_1.e2(key);
   return (tmp == null ? true : isInterface(tmp, AutoCloseable)) ? tmp : THROW_CCE();
 };
 function ViewModelImpl() {
-  this.s1y_1 = new SynchronizedObject();
+  this.i20_1 = new SynchronizedObject();
   var tmp = this;
   // Inline function 'kotlin.collections.mutableMapOf' call
-  tmp.t1y_1 = LinkedHashMap_init_$Create$();
+  tmp.j20_1 = LinkedHashMap_init_$Create$();
   var tmp_0 = this;
   // Inline function 'kotlin.collections.mutableSetOf' call
-  tmp_0.u1y_1 = LinkedHashSet_init_$Create$();
-  this.v1y_1 = false;
+  tmp_0.k20_1 = LinkedHashSet_init_$Create$();
+  this.l20_1 = false;
 }
 function ViewModel_init_$Init$($this) {
   ViewModel.call($this);
-  $this.o1y_1 = ViewModelImpl_init_$Create$();
+  $this.e20_1 = ViewModelImpl_init_$Create$();
   return $this;
 }
-protoOf(ViewModel).q1y = function (key, closeable) {
-  this.o1y_1.q1y(key, closeable);
+protoOf(ViewModel).g20 = function (key, closeable) {
+  this.e20_1.g20(key, closeable);
 };
-protoOf(ViewModel).p1y = function (key) {
-  return this.o1y_1.p1y(key);
+protoOf(ViewModel).f20 = function (key) {
+  return this.e20_1.f20(key);
 };
 function ViewModel() {
 }

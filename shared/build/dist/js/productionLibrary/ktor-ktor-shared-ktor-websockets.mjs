@@ -65,14 +65,14 @@ function Companion() {
   var _iterator__ex2g4s = this_0.j();
   while (_iterator__ex2g4s.k()) {
     var element = _iterator__ex2g4s.l();
-    var tmp$ret$0 = element.j3g_1;
+    var tmp$ret$0 = element.y3h_1;
     destination.h2(tmp$ret$0, element);
   }
-  tmp.k3g_1 = destination;
-  this.l3g_1 = Codes_INTERNAL_ERROR_getInstance();
+  tmp.z3h_1 = destination;
+  this.a3i_1 = Codes_INTERNAL_ERROR_getInstance();
 }
-protoOf(Companion).m3g = function (code) {
-  return this.k3g_1.e2(code);
+protoOf(Companion).b3i = function (code) {
+  return this.z3h_1.e2(code);
 };
 var Companion_instance;
 function Companion_getInstance() {
@@ -111,7 +111,7 @@ function Codes_initEntries() {
 var $ENTRIES;
 function Codes(name, ordinal, code) {
   Enum.call(this, name, ordinal);
-  this.j3g_1 = code;
+  this.y3h_1 = code;
 }
 function Codes_NORMAL_getInstance() {
   Codes_initEntries();
@@ -162,19 +162,19 @@ function Codes_TRY_AGAIN_LATER_getInstance() {
   return Codes_TRY_AGAIN_LATER_instance;
 }
 function CloseReason(code, message) {
-  this.n3g_1 = code;
-  this.o3g_1 = message;
+  this.c3i_1 = code;
+  this.d3i_1 = message;
 }
-protoOf(CloseReason).p3g = function () {
-  return Companion_getInstance().m3g(this.n3g_1);
+protoOf(CloseReason).e3i = function () {
+  return Companion_getInstance().b3i(this.c3i_1);
 };
 protoOf(CloseReason).toString = function () {
-  var tmp0_elvis_lhs = this.p3g();
-  return 'CloseReason(reason=' + toString(tmp0_elvis_lhs == null ? this.n3g_1 : tmp0_elvis_lhs) + ', message=' + this.o3g_1 + ')';
+  var tmp0_elvis_lhs = this.e3i();
+  return 'CloseReason(reason=' + toString(tmp0_elvis_lhs == null ? this.c3i_1 : tmp0_elvis_lhs) + ', message=' + this.d3i_1 + ')';
 };
 protoOf(CloseReason).hashCode = function () {
-  var result = this.n3g_1;
-  result = imul(result, 31) + getStringHashCode(this.o3g_1) | 0;
+  var result = this.c3i_1;
+  result = imul(result, 31) + getStringHashCode(this.d3i_1) | 0;
   return result;
 };
 protoOf(CloseReason).equals = function (other) {
@@ -183,15 +183,15 @@ protoOf(CloseReason).equals = function (other) {
   if (!(other instanceof CloseReason))
     return false;
   var tmp0_other_with_cast = other instanceof CloseReason ? other : THROW_CCE();
-  if (!(this.n3g_1 === tmp0_other_with_cast.n3g_1))
+  if (!(this.c3i_1 === tmp0_other_with_cast.c3i_1))
     return false;
-  if (!(this.o3g_1 === tmp0_other_with_cast.o3g_1))
+  if (!(this.d3i_1 === tmp0_other_with_cast.d3i_1))
     return false;
   return true;
 };
 function NonDisposableHandle() {
 }
-protoOf(NonDisposableHandle).pq = function () {
+protoOf(NonDisposableHandle).tq = function () {
   return Unit_instance;
 };
 protoOf(NonDisposableHandle).toString = function () {
@@ -234,10 +234,10 @@ function Companion_0() {
       tmp$ret$0 = maxElem;
       break $l$block_0;
     }
-    var maxValue = maxElem.t3g_1;
+    var maxValue = maxElem.i3i_1;
     do {
       var e = iterator.l();
-      var v = e.t3g_1;
+      var v = e.i3i_1;
       if (compareTo(maxValue, v) < 0) {
         maxElem = e;
         maxValue = v;
@@ -246,10 +246,10 @@ function Companion_0() {
      while (iterator.k());
     tmp$ret$0 = maxElem;
   }
-  tmp.u3g_1 = ensureNotNull(tmp$ret$0).t3g_1;
+  tmp.j3i_1 = ensureNotNull(tmp$ret$0).i3i_1;
   var tmp_0 = this;
   var tmp_1 = 0;
-  var tmp_2 = this.u3g_1 + 1 | 0;
+  var tmp_2 = this.j3i_1 + 1 | 0;
   // Inline function 'kotlin.arrayOfNulls' call
   var tmp_3 = Array(tmp_2);
   while (tmp_1 < tmp_2) {
@@ -263,7 +263,7 @@ function Companion_0() {
       var _iterator__ex2g4s = tmp0_0.j();
       while (_iterator__ex2g4s.k()) {
         var element = _iterator__ex2g4s.l();
-        if (element.t3g_1 === tmp_4) {
+        if (element.i3i_1 === tmp_4) {
           if (found) {
             tmp$ret$5 = null;
             break $l$block_2;
@@ -281,7 +281,7 @@ function Companion_0() {
     tmp_3[tmp_4] = tmp$ret$5;
     tmp_1 = tmp_1 + 1 | 0;
   }
-  tmp_0.v3g_1 = tmp_3;
+  tmp_0.k3i_1 = tmp_3;
 }
 var Companion_instance_0;
 function Companion_getInstance_0() {
@@ -313,8 +313,8 @@ function FrameType_initEntries() {
 var $ENTRIES_0;
 function FrameType(name, ordinal, controlFrame, opcode) {
   Enum.call(this, name, ordinal);
-  this.s3g_1 = controlFrame;
-  this.t3g_1 = opcode;
+  this.h3i_1 = controlFrame;
+  this.i3i_1 = opcode;
 }
 function FrameType_TEXT_getInstance() {
   FrameType_initEntries();
@@ -357,8 +357,8 @@ function Text_init_$Create$(text) {
 function Close_init_$Init$(reason, $this) {
   // Inline function 'io.ktor.utils.io.core.buildPacket' call
   var builder = new Buffer();
-  builder.t20(reason.n3g_1);
-  writeText(builder, reason.o3g_1);
+  builder.j22(reason.c3i_1);
+  writeText(builder, reason.d3i_1);
   Close_init_$Init$_0(builder, $this);
   return $this;
 }
@@ -370,7 +370,7 @@ function Close_init_$Init$_0(packet, $this) {
   return $this;
 }
 function Close_init_$Init$_1($this) {
-  Close.call($this, Companion_getInstance_1().w3g_1);
+  Close.call($this, Companion_getInstance_1().l3i_1);
   return $this;
 }
 function Close_init_$Create$_0() {
@@ -393,7 +393,7 @@ function Close(data) {
 }
 function Companion_1() {
   Companion_instance_1 = this;
-  this.w3g_1 = new Int8Array(0);
+  this.l3i_1 = new Int8Array(0);
 }
 var Companion_instance_1;
 function Companion_getInstance_1() {
@@ -407,16 +407,16 @@ function Frame(fin, frameType, data, disposableHandle, rsv1, rsv2, rsv3) {
   rsv1 = rsv1 === VOID ? false : rsv1;
   rsv2 = rsv2 === VOID ? false : rsv2;
   rsv3 = rsv3 === VOID ? false : rsv3;
-  this.x3g_1 = fin;
-  this.y3g_1 = frameType;
-  this.z3g_1 = data;
-  this.a3h_1 = disposableHandle;
-  this.b3h_1 = rsv1;
-  this.c3h_1 = rsv2;
-  this.d3h_1 = rsv3;
+  this.m3i_1 = fin;
+  this.n3i_1 = frameType;
+  this.o3i_1 = data;
+  this.p3i_1 = disposableHandle;
+  this.q3i_1 = rsv1;
+  this.r3i_1 = rsv2;
+  this.s3i_1 = rsv3;
 }
 protoOf(Frame).toString = function () {
-  return 'Frame ' + this.y3g_1.toString() + ' (fin=' + this.x3g_1 + ', buffer len = ' + this.z3g_1.length + ')';
+  return 'Frame ' + this.n3i_1.toString() + ' (fin=' + this.m3i_1 + ', buffer len = ' + this.o3i_1.length + ')';
 };
 //region block: init
 NonDisposableHandle_instance = new NonDisposableHandle();

@@ -15,7 +15,7 @@ export declare class CategoryInfoDto {
     get id(): string;
     get displayName(): string;
     get emoji(): string;
-    get ongoingCount(): number;
+    get ongoingCount(): Nullable<number>;
     get themeColorHex(): string;
     get isEnabled(): boolean;
     get span(): string;
@@ -30,6 +30,7 @@ export declare class MainUiStateDto {
     get isLoggedIn(): boolean;
     get userName(): Nullable<string>;
     get transientMessage(): Nullable<string>;
+    get errorMessage(): Nullable<string>;
 }
 /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
 export declare namespace MainUiStateDto.$metadata$ {
@@ -45,9 +46,14 @@ export declare class AuctionItemDto {
     get latitude(): number;
     get longitude(): number;
     get address(): string;
+    get title(): Nullable<string>;
+    get buildingUnitLabel(): Nullable<string>;
     get appraisalText(): Nullable<string>;
     get minBidText(): Nullable<string>;
+    get appraisalPrice(): Nullable<number>;
+    get minBidPrice(): Nullable<number>;
     get bidEndShort(): Nullable<string>;
+    get bidEndAt(): Nullable<string>;
     get markerSubInfo(): Nullable<string>;
     get status(): Nullable<string>;
     get statusLabel(): Nullable<string>;
@@ -68,6 +74,18 @@ export declare class AuctionClusterDto {
 export declare namespace AuctionClusterDto.$metadata$ {
     const constructor: abstract new () => AuctionClusterDto;
 }
+export declare class MarkerGroupDto {
+    private constructor();
+    get groupKey(): string;
+    get latitude(): number;
+    get longitude(): number;
+    get count(): number;
+    get items(): Array<AuctionItemDto>;
+}
+/** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
+export declare namespace MarkerGroupDto.$metadata$ {
+    const constructor: abstract new () => MarkerGroupDto;
+}
 export declare class MapUiStateDto {
     private constructor();
     get items(): Array<AuctionItemDto>;
@@ -79,6 +97,10 @@ export declare class MapUiStateDto {
     get locationFallbackUsed(): boolean;
     get clusters(): Array<AuctionClusterDto>;
     get clusterMode(): boolean;
+    get isLoadingItems(): boolean;
+    get errorMessage(): Nullable<string>;
+    get markerGroups(): Array<MarkerGroupDto>;
+    get selectedGroup(): Nullable<MarkerGroupDto>;
 }
 /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
 export declare namespace MapUiStateDto.$metadata$ {
@@ -90,6 +112,7 @@ export declare class MainViewModelJs {
     toggleLogin(): void;
     onDisabledCategoryClick(displayName: string): void;
     consumeMessage(): void;
+    dismissError(): void;
     dispose(): void;
 }
 /** @deprecated $metadata$ is used for internal purposes, please don't use it in your code, because it can be removed at any moment */
@@ -101,10 +124,12 @@ export declare class MapViewModelJs {
     subscribe(onState: (p0: MapUiStateDto) => void): () => void;
     onMapReady(moveHandler: (p0: number, p1: number, p2: number, p3: boolean) => void): void;
     onMarkerClick(itemId: string): void;
+    onGroupClick(groupKey: string): void;
     onMyLocationClick(): void;
     onZoomIn(): void;
     onZoomOut(): void;
     clearSelection(): void;
+    dismissError(): void;
     onLocationPermissionGranted(): void;
     onMapZoomChanged(kakaoLevel: number): void;
     onClusterClick(cityKey: string): void;

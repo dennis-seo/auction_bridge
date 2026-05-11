@@ -16,18 +16,18 @@ function get_DefaultJson() {
 var DefaultJson;
 function json(_this__u8e3s4, json, contentType) {
   json = json === VOID ? get_DefaultJson() : json;
-  contentType = contentType === VOID ? Application_getInstance().l34_1 : contentType;
+  contentType = contentType === VOID ? Application_getInstance().a36_1 : contentType;
   _init_properties_JsonSupport_kt__yf438r();
   serialization(_this__u8e3s4, contentType, json);
 }
 function DefaultJson$lambda($this$Json) {
   _init_properties_JsonSupport_kt__yf438r();
-  $this$Json.f59_1 = true;
-  $this$Json.i59_1 = true;
-  $this$Json.t59_1 = true;
-  $this$Json.u59_1 = true;
-  $this$Json.j59_1 = false;
-  $this$Json.v59_1 = false;
+  $this$Json.u5a_1 = true;
+  $this$Json.x5a_1 = true;
+  $this$Json.i5b_1 = true;
+  $this$Json.j5b_1 = true;
+  $this$Json.y5a_1 = false;
+  $this$Json.k5b_1 = false;
   return Unit_instance;
 }
 var properties_initialized_JsonSupport_kt_9cgd93;

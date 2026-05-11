@@ -20,123 +20,123 @@ initMetadataForClass(ConcurrentMutableSet, 'ConcurrentMutableSet', ConcurrentMut
 //endregion
 function ConcurrentMutableCollection$_get_size_$lambda_dssf9y(this$0) {
   return function () {
-    return this$0.u5j_1.m();
+    return this$0.j5l_1.m();
   };
 }
 function ConcurrentMutableCollection$contains$lambda(this$0, $element) {
   return function () {
-    return this$0.u5j_1.u1($element);
+    return this$0.j5l_1.u1($element);
   };
 }
 function ConcurrentMutableCollection$containsAll$lambda(this$0, $elements) {
   return function () {
-    return this$0.u5j_1.v1($elements);
+    return this$0.j5l_1.v1($elements);
   };
 }
 function ConcurrentMutableCollection$isEmpty$lambda(this$0) {
   return function () {
-    return this$0.u5j_1.p();
+    return this$0.j5l_1.p();
   };
 }
 function ConcurrentMutableCollection$add$lambda(this$0, $element) {
   return function () {
-    return this$0.u5j_1.e($element);
+    return this$0.j5l_1.e($element);
   };
 }
 function ConcurrentMutableCollection$addAll$lambda(this$0, $elements) {
   return function () {
-    return this$0.u5j_1.n($elements);
+    return this$0.j5l_1.n($elements);
   };
 }
 function ConcurrentMutableCollection$clear$lambda(this$0) {
   return function () {
-    this$0.u5j_1.y1();
+    this$0.j5l_1.y1();
     return Unit_instance;
   };
 }
 function ConcurrentMutableCollection$iterator$lambda(this$0) {
   return function () {
-    return new ConcurrentMutableIterator(this$0.v5j_1, this$0.u5j_1.j());
+    return new ConcurrentMutableIterator(this$0.k5l_1, this$0.j5l_1.j());
   };
 }
 function ConcurrentMutableCollection(rootArg, del) {
   rootArg = rootArg === VOID ? null : rootArg;
-  this.u5j_1 = del;
+  this.j5l_1 = del;
   var tmp = this;
-  tmp.v5j_1 = rootArg == null ? this : rootArg;
+  tmp.k5l_1 = rootArg == null ? this : rootArg;
 }
 protoOf(ConcurrentMutableCollection).m = function () {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableCollection$_get_size_$lambda_dssf9y(this)();
 };
 protoOf(ConcurrentMutableCollection).u1 = function (element) {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableCollection$contains$lambda(this, element)();
 };
 protoOf(ConcurrentMutableCollection).v1 = function (elements) {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableCollection$containsAll$lambda(this, elements)();
 };
 protoOf(ConcurrentMutableCollection).p = function () {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableCollection$isEmpty$lambda(this)();
 };
 protoOf(ConcurrentMutableCollection).e = function (element) {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableCollection$add$lambda(this, element)();
 };
 protoOf(ConcurrentMutableCollection).n = function (elements) {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableCollection$addAll$lambda(this, elements)();
 };
 protoOf(ConcurrentMutableCollection).y1 = function () {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   ConcurrentMutableCollection$clear$lambda(this)();
 };
 protoOf(ConcurrentMutableCollection).j = function () {
-  this.v5j_1;
+  this.k5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableCollection$iterator$lambda(this)();
 };
 function ConcurrentMutableIterator$hasNext$lambda(this$0) {
   return function () {
-    return this$0.x5j_1.k();
+    return this$0.m5l_1.k();
   };
 }
 function ConcurrentMutableIterator$next$lambda(this$0) {
   return function () {
-    return this$0.x5j_1.l();
+    return this$0.m5l_1.l();
   };
 }
 function ConcurrentMutableIterator$remove$lambda(this$0) {
   return function () {
-    this$0.x5j_1.b4();
+    this$0.m5l_1.b4();
     return Unit_instance;
   };
 }
 function ConcurrentMutableIterator(root, del) {
-  this.w5j_1 = root;
-  this.x5j_1 = del;
+  this.l5l_1 = root;
+  this.m5l_1 = del;
 }
 protoOf(ConcurrentMutableIterator).k = function () {
-  this.w5j_1;
+  this.l5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableIterator$hasNext$lambda(this)();
 };
 protoOf(ConcurrentMutableIterator).l = function () {
-  this.w5j_1;
+  this.l5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableIterator$next$lambda(this)();
 };
 protoOf(ConcurrentMutableIterator).b4 = function () {
-  this.w5j_1;
+  this.l5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   ConcurrentMutableIterator$remove$lambda(this)();
 };
@@ -151,119 +151,119 @@ function ConcurrentMutableMap_init_$Create$() {
 }
 function ConcurrentMutableMap$_get_size_$lambda_nuyc4q(this$0) {
   return function () {
-    return this$0.y5j_1.m();
+    return this$0.n5l_1.m();
   };
 }
 function ConcurrentMutableMap$_get_entries_$lambda_dp7xtt(this$0) {
   return function () {
-    return new ConcurrentMutableSet(this$0, this$0.y5j_1.r());
+    return new ConcurrentMutableSet(this$0, this$0.n5l_1.r());
   };
 }
 function ConcurrentMutableMap$_get_keys_$lambda_5gjoyr(this$0) {
   return function () {
-    return new ConcurrentMutableSet(this$0, this$0.y5j_1.f2());
+    return new ConcurrentMutableSet(this$0, this$0.n5l_1.f2());
   };
 }
 function ConcurrentMutableMap$_get_values_$lambda_tyvlyt(this$0) {
   return function () {
-    return new ConcurrentMutableCollection(this$0, this$0.y5j_1.g2());
+    return new ConcurrentMutableCollection(this$0, this$0.n5l_1.g2());
   };
 }
 function ConcurrentMutableMap$containsKey$lambda(this$0, $key) {
   return function () {
-    return this$0.y5j_1.c2($key);
+    return this$0.n5l_1.c2($key);
   };
 }
 function ConcurrentMutableMap$get$lambda(this$0, $key) {
   return function () {
-    return this$0.y5j_1.e2($key);
+    return this$0.n5l_1.e2($key);
   };
 }
 function ConcurrentMutableMap$isEmpty$lambda(this$0) {
   return function () {
-    return this$0.y5j_1.p();
+    return this$0.n5l_1.p();
   };
 }
 function ConcurrentMutableMap$clear$lambda(this$0) {
   return function () {
-    this$0.y5j_1.y1();
+    this$0.n5l_1.y1();
     return Unit_instance;
   };
 }
 function ConcurrentMutableMap$put$lambda(this$0, $key, $value) {
   return function () {
-    return this$0.y5j_1.h2($key, $value);
+    return this$0.n5l_1.h2($key, $value);
   };
 }
 function ConcurrentMutableMap$putAll$lambda(this$0, $from) {
   return function () {
-    this$0.y5j_1.j2($from);
+    this$0.n5l_1.j2($from);
     return Unit_instance;
   };
 }
 function ConcurrentMutableMap$remove$lambda(this$0, $key) {
   return function () {
-    return this$0.y5j_1.i2($key);
+    return this$0.n5l_1.i2($key);
   };
 }
 function ConcurrentMutableMap(rootArg, del) {
   rootArg = rootArg === VOID ? null : rootArg;
-  this.y5j_1 = del;
+  this.n5l_1 = del;
   var tmp = this;
-  tmp.z5j_1 = rootArg == null ? this : rootArg;
+  tmp.o5l_1 = rootArg == null ? this : rootArg;
 }
 protoOf(ConcurrentMutableMap).m = function () {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$_get_size_$lambda_nuyc4q(this)();
 };
 protoOf(ConcurrentMutableMap).r = function () {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$_get_entries_$lambda_dp7xtt(this)();
 };
 protoOf(ConcurrentMutableMap).f2 = function () {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$_get_keys_$lambda_5gjoyr(this)();
 };
 protoOf(ConcurrentMutableMap).g2 = function () {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$_get_values_$lambda_tyvlyt(this)();
 };
 protoOf(ConcurrentMutableMap).c2 = function (key) {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$containsKey$lambda(this, key)();
 };
 protoOf(ConcurrentMutableMap).e2 = function (key) {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$get$lambda(this, key)();
 };
 protoOf(ConcurrentMutableMap).p = function () {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$isEmpty$lambda(this)();
 };
 protoOf(ConcurrentMutableMap).y1 = function () {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   ConcurrentMutableMap$clear$lambda(this)();
 };
 protoOf(ConcurrentMutableMap).h2 = function (key, value) {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$put$lambda(this, key, value)();
 };
 protoOf(ConcurrentMutableMap).j2 = function (from) {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   ConcurrentMutableMap$putAll$lambda(this, from)();
 };
 protoOf(ConcurrentMutableMap).i2 = function (key) {
-  this.z5j_1;
+  this.o5l_1;
   // Inline function 'co.touchlab.stately.concurrency.synchronize' call
   return ConcurrentMutableMap$remove$lambda(this, key)();
 };
@@ -278,7 +278,7 @@ function ConcurrentMutableSet_init_$Create$() {
 }
 function ConcurrentMutableSet(rootArg, del) {
   ConcurrentMutableCollection.call(this, rootArg, del);
-  this.c5k_1 = del;
+  this.r5l_1 = del;
 }
 //region block: exports
 export {
