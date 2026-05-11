@@ -12,6 +12,7 @@ export {
   type MapUiStateDto,
   type AuctionItemDto,
   type AuctionClusterDto,
+  type MarkerGroupDto,
 } from "auctionbridge-shared";
 
 import { createAuctionBridge } from "auctionbridge-shared";

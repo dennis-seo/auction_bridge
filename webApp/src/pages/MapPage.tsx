@@ -5,6 +5,7 @@ import { KakaoMap, type KakaoCluster, type KakaoMarker } from "../components/map
 import { AuctionDetailPanel } from "../components/map/AuctionDetailPanel";
 import { MapControls } from "../components/map/MapControls";
 import { MapSearchBar } from "../components/map/MapSearchBar";
+import { ErrorToast } from "../components/ErrorToast";
 
 const CATEGORY_TITLES: Record<string, string> = {
   apartment: "아파트 지도",
@@ -34,14 +35,21 @@ export function MapPage() {
 
   const markers = useMemo<KakaoMarker[]>(() => {
     if (!state || state.clusterMode) return [];
-    return state.items.map((it) => ({
-      id: it.id,
-      latitude: it.latitude,
-      longitude: it.longitude,
-      categoryLabel: it.categoryDisplayName,
-      priceLabel: it.priceText,
-      subInfo: it.markerSubInfo,
-    }));
+    // 동일 좌표 매물은 한 그룹으로 묶어 하나의 마커. count=1 이면 단건 마커.
+    return state.markerGroups.map((g) => {
+      const head = g.items[0];
+      return {
+        id: g.groupKey,
+        latitude: g.latitude,
+        longitude: g.longitude,
+        // count 가 2 이상일 때 KakaoMap 컴포넌트가 "{categoryLabel} ({count}건)" 으로 표시.
+        categoryLabel: head.categoryDisplayName,
+        priceLabel: head.priceText,
+        // 다건일 땐 매물별로 마감일/유찰이 다를 수 있으니 sub 정보는 숨김.
+        subInfo: g.count > 1 ? null : head.markerSubInfo,
+        count: g.count,
+      };
+    });
   }, [state]);
 
   const clusters = useMemo<KakaoCluster[]>(() => {
@@ -84,7 +92,7 @@ export function MapPage() {
         initialKakaoLevel={initialKakaoLevel}
         markers={markers}
         clusters={clusters}
-        onMarkerClick={(id) => vm.onMarkerClick(id)}
+        onMarkerClick={(groupKey) => vm.onGroupClick(groupKey)}
         onClusterClick={(cityKey) => vm.onClusterClick(cityKey)}
         onZoomChanged={(level) => vm.onMapZoomChanged(level)}
         onReady={handleReady}
@@ -92,11 +100,11 @@ export function MapPage() {
 
       <MapSearchBar title={title} onBack={() => navigate("/")} />
 
-      {state.selectedItem && (
+      {state.selectedGroup && state.selectedGroup.count > 0 && (
         <AuctionDetailPanel
-          item={state.selectedItem}
+          items={Array.from(state.selectedGroup.items)}
           onClose={() => vm.clearSelection()}
-          onDetail={() => navigate(`/detail/${state.selectedItem!.id}`)}
+          onDetail={(itemId) => navigate(`/detail/${itemId}`)}
         />
       )}
 
@@ -105,6 +113,31 @@ export function MapPage() {
         onZoomIn={() => vm.onZoomIn()}
         onZoomOut={() => vm.onZoomOut()}
       />
+
+      {state.isLoadingItems && (
+        <div
+          role="status"
+          aria-live="polite"
+          aria-label="매물 불러오는 중"
+          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
+        >
+          <div className="pointer-events-auto flex items-center gap-3 rounded-2xl bg-brand-deepNavy/85 px-5 py-3.5 text-white shadow-[0_8px_32px_-12px_rgba(0,0,0,0.6)] backdrop-blur-sm">
+            <span
+              aria-hidden="true"
+              className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-white/30 border-t-white"
+            />
+            <span className="text-sm font-medium">매물 불러오는 중…</span>
+          </div>
+        </div>
+      )}
+
+      {state.errorMessage && (
+        <ErrorToast
+          title="매물 불러오기 실패"
+          message={state.errorMessage}
+          onDismiss={() => vm.dismissError()}
+        />
+      )}
     </div>
   );
 }

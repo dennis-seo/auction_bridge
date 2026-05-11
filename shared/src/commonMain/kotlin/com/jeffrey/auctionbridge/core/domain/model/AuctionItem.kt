@@ -15,6 +15,11 @@ data class AuctionItem(
     val longitude: Double,
     val address: String,
     // ---- 서버 연동 시 채워지는 부가 정보 ----
+    /**
+     * 매물 제목 — 서버 onbid 원본에서 보통 "{도로명/지번 주소} {아파트명} 제{N}동 제{N}층 제{N}호" 형태.
+     * 동일 좌표(같은 단지) 매물을 호수 단위로 구분할 때 사용.
+     */
+    val title: String? = null,
     /** 감정가 (원). 없으면 null. */
     val appraisalPrice: Long? = null,
     /** 최저 입찰가 (원). 없으면 null. */

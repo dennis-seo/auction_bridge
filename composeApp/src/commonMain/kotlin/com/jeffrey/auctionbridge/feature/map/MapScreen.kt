@@ -1,17 +1,33 @@
 package com.jeffrey.auctionbridge.feature.map
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import com.jeffrey.auctionbridge.core.platform.RequestLocationPermissionOnce
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
@@ -112,6 +128,84 @@ fun MapScreen(
                     item = item,
                     onDetailClick = onItemClick,
                     onClose = viewModel::clearSelection,
+                )
+            }
+        }
+
+        AnimatedVisibility(
+            visible = uiState.errorMessage != null,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = 24.dp)
+                .widthIn(max = 360.dp),
+        ) {
+            uiState.errorMessage?.let { msg ->
+                Row(
+                    modifier = Modifier
+                        .background(
+                            color = Color(0xD94B0A14),
+                            shape = RoundedCornerShape(12.dp),
+                        )
+                        .border(
+                            width = 1.dp,
+                            color = Color(0x66F87171),
+                            shape = RoundedCornerShape(12.dp),
+                        )
+                        .padding(PaddingValues(horizontal = 14.dp, vertical = 12.dp)),
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    Text(text = "⚠️", color = Color.White)
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text(
+                            text = "매물 불러오기 실패",
+                            color = Color(0xFFFCA5A5),
+                            style = MaterialTheme.typography.labelMedium,
+                        )
+                        Text(
+                            text = msg,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodySmall,
+                            modifier = Modifier.padding(top = 4.dp),
+                        )
+                    }
+                    Text(
+                        text = "×",
+                        color = Color.White.copy(alpha = 0.7f),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.clickable { viewModel.dismissError() },
+                    )
+                }
+            }
+        }
+
+        AnimatedVisibility(
+            visible = uiState.isLoadingItems,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier.align(Alignment.Center),
+        ) {
+            Row(
+                modifier = Modifier
+                    .background(
+                        color = Color(0xD91B2A3F),
+                        shape = RoundedCornerShape(16.dp),
+                    )
+                    .padding(PaddingValues(horizontal = 20.dp, vertical = 14.dp)),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = Color.White,
+                    strokeWidth = 2.dp,
+                )
+                Text(
+                    text = "매물 불러오는 중…",
+                    color = Color.White,
+                    style = MaterialTheme.typography.bodyMedium,
                 )
             }
         }

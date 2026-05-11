@@ -67,3 +67,37 @@ fun AuctionItem.markerSubInfo(): String? {
         else -> null
     }
 }
+
+/**
+ * 같은 주소의 매물을 호수 단위로 구분하는 식별 라벨.
+ *
+ * 서버 title 은 보통 `"{주소(시도+시군구+동)} {지번} {아파트명} 제{N}동 제{N}층 제{N}호"` 형태.
+ * UI 가 헤더로 주소를 따로 노출하는 경우, 카드별로 주소+지번까지 제거하면 단지명+동+층+호수만 남는다.
+ *
+ * 처리 규칙:
+ *  - title 이 null/blank → null
+ *  - title 이 address 로 시작하면 그 prefix 제거
+ *  - 결과 앞쪽이 지번(예: "147-5", "산 12", "294번지") 이면 그 토큰까지 제거
+ *  - 모두 비면 title 원본 fallback
+ */
+fun AuctionItem.buildingUnitLabel(): String? {
+    val raw = title?.trim().orEmpty()
+    if (raw.isEmpty()) return null
+    val addr = address.trim()
+    val withoutAddress = if (addr.isNotEmpty() && raw.startsWith(addr)) {
+        raw.removePrefix(addr).trim()
+    } else {
+        raw
+    }
+    val withoutLot = withoutAddress.replaceFirst(LOT_NO_PATTERN, "").trim()
+    return withoutLot.ifBlank { withoutAddress.ifBlank { raw } }
+}
+
+/**
+ * 지번 패턴 — 앞 부분에 붙는 "147-5 ", "산 12 ", "294번지 ", "294 " 등을 잡는다.
+ *  - `(산\s*)?` 산지(山地) prefix 선택
+ *  - `\d+(-\d+)?` 숫자 또는 숫자-숫자
+ *  - `(번지)?` "번지" 접미사 선택
+ *  - `\s+` 뒤에 공백(다음 토큰과 분리) 필수 — 단지명에 숫자만 있을 때 잘리는 사고 방지
+ */
+private val LOT_NO_PATTERN = Regex("""^(산\s*)?\d+(-\d+)?(번지)?\s+""")

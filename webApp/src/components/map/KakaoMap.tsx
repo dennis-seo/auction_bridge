@@ -6,6 +6,7 @@ import {
 } from "../../shared/kakaoLoader";
 
 export interface KakaoMarker {
+  /** 마커 식별자 — 클릭 콜백에 전달된다. 좌표 그룹 키 또는 단일 매물 id. */
   id: string;
   latitude: number;
   longitude: number;
@@ -13,6 +14,8 @@ export interface KakaoMarker {
   priceLabel: string;
   /** 마감일/유찰 등 보조 정보. 없으면 마커가 2줄로 표시. */
   subInfo?: string | null;
+  /** 묶인 매물 개수. 1보다 크면 priceLabel 우측에 "N건" 배지 노출. */
+  count?: number;
 }
 
 export interface KakaoCluster {
@@ -124,20 +127,25 @@ export function KakaoMap({
     const k = window.kakao?.maps;
     if (!map || !k) return;
 
-    const newIds = new Set(markers.map((m) => m.id));
-    for (const [id, ov] of markerOverlaysRef.current.entries()) {
-      if (!newIds.has(id)) {
+    // 마커 키 = id + count + price + subInfo — 그룹 내 매물 변화/가격 변화 시 새 마커로 갱신.
+    const keyOf = (m: KakaoMarker) =>
+      `${m.id}#${m.count ?? 1}#${m.priceLabel}#${m.subInfo ?? ""}`;
+    const newKeys = new Set(markers.map(keyOf));
+    for (const [key, ov] of markerOverlaysRef.current.entries()) {
+      if (!newKeys.has(key)) {
         ov.setMap(null);
-        markerOverlaysRef.current.delete(id);
+        markerOverlaysRef.current.delete(key);
       }
     }
     for (const m of markers) {
-      if (markerOverlaysRef.current.has(m.id)) continue;
+      const key = keyOf(m);
+      if (markerOverlaysRef.current.has(key)) continue;
       const div = document.createElement("div");
       div.className = "auction-bubble";
       const cat = document.createElement("div");
       cat.className = "auction-bubble-category";
-      cat.textContent = m.categoryLabel;
+      const count = m.count ?? 1;
+      cat.textContent = count > 1 ? `${m.categoryLabel} (${count}건)` : m.categoryLabel;
       const price = document.createElement("div");
       price.className = "auction-bubble-price";
       price.textContent = m.priceLabel;
@@ -159,7 +167,7 @@ export function KakaoMap({
         xAnchor: 0.5,
         clickable: true,
       });
-      markerOverlaysRef.current.set(m.id, overlay);
+      markerOverlaysRef.current.set(key, overlay);
     }
   }, [markers]);
 

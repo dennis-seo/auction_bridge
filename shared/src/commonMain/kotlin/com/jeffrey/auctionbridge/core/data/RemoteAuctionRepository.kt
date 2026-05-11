@@ -26,39 +26,66 @@ class RemoteAuctionRepository(
 
     override fun getCategoryList(): Flow<List<CategoryInfo>> = mock.getCategoryList()
 
+    /**
+     * 서버 stats 응답 → `AuctionCategory` 별 진행 건수 맵.
+     *  - realty.categories: key 가 도메인 enum 과 1:1 매핑 (apartment/villa/officetel/house/commercial→STORE/land)
+     *  - vehicle 그룹은 sedan/van/truck/... 의 합을 CAR 로 묶음
+     *  - movable 그룹은 현재 UI 노출 안 함 → 무시
+     *  - "etc" 등 매핑 안 되는 key 는 합산 대상에서 제외
+     */
+    override suspend fun getCategoryStats(): Map<AuctionCategory, Int> {
+        val res = api.getStats()
+        val out = mutableMapOf<AuctionCategory, Int>()
+        for (group in res.groups) {
+            when (group.assetType) {
+                "realty" -> {
+                    for (c in group.categories) {
+                        when (c.key) {
+                            "apartment" -> out[AuctionCategory.APARTMENT] = c.count
+                            "villa" -> out[AuctionCategory.VILLA] = c.count
+                            "officetel" -> out[AuctionCategory.OFFICE_TEL] = c.count
+                            "house" -> out[AuctionCategory.HOUSE] = c.count
+                            "commercial" -> out[AuctionCategory.STORE] = c.count
+                            "land" -> out[AuctionCategory.LAND] = c.count
+                            // "etc" 등은 도메인에 매핑 안 됨
+                        }
+                    }
+                }
+                "vehicle" -> {
+                    // 차량 서브카테고리(sedan/van/truck/bus/motorcycle/special/etc) 합산.
+                    out[AuctionCategory.CAR] = group.categories.sumOf { it.count }
+                }
+                // "movable" — 현재 UI 노출 카테고리 없음
+            }
+        }
+        return out
+    }
+
     override suspend fun getAuctionDetail(id: String): AuctionDetail {
         return runCatching { api.getAuction(id).toDomain() }
             .getOrElse { mock.getAuctionDetail(id) }
     }
 
+    /**
+     * 서버 호출 결과를 그대로 emit. **mock fallback 하지 않는다** —
+     * 실패는 예외로 호출자(ViewModel)에 전파되어 UI 에 에러를 표시.
+     * 빈 결과(`[]`)는 정상 응답으로 간주, 0건 emit.
+     */
     override fun getAuctionItems(category: AuctionCategory): Flow<List<AuctionItem>> = flow {
         val propertyCategory = serverPropertyCategory(category)
         val assetType = if (propertyCategory != null) "realty" else null
-        val items = runCatching {
-            val res = api.listAuctions(
-                minLng = DEFAULT_BBOX.minLng,
-                maxLng = DEFAULT_BBOX.maxLng,
-                minLat = DEFAULT_BBOX.minLat,
-                maxLat = DEFAULT_BBOX.maxLat,
-                assetType = assetType,
-                propertyCategory = propertyCategory,
-                // scheduled / ongoing 모두 노출하기 위해 status 필터 미적용.
-                // (sold/failed/cancelled 도 포함되지만 thumbnail/marker 표시에는 무해.
-                //  추후 UI 토글로 제어 가능.)
-                status = null,
-                limit = 500,
-            )
-            res.items.mapNotNull { it.toDomainOrNull(category) }
-        }.getOrElse {
-            // 서버 미기동/네트워크 오류 → mock 으로 흐름 유지
-            emptyList()
-        }
-
-        if (items.isNotEmpty()) {
-            emit(items)
-        } else {
-            mock.getAuctionItems(category).collect { emit(it) }
-        }
+        val res = api.listAuctions(
+            minLng = DEFAULT_BBOX.minLng,
+            maxLng = DEFAULT_BBOX.maxLng,
+            minLat = DEFAULT_BBOX.minLat,
+            maxLat = DEFAULT_BBOX.maxLat,
+            assetType = assetType,
+            propertyCategory = propertyCategory,
+            // scheduled / ongoing 모두 노출하기 위해 status 필터 미적용.
+            status = null,
+            limit = 500,
+        )
+        emit(res.items.mapNotNull { it.toDomainOrNull(category) })
     }
 
     private companion object {
@@ -104,6 +131,7 @@ private fun AuctionListItemDto.toDomainOrNull(category: AuctionCategory): Auctio
         latitude = lat,
         longitude = lng,
         address = address ?: title ?: "",
+        title = title,
         appraisalPrice = appraisalPrice,
         minBidPrice = minBidPrice,
         bidEndAt = bidEndAt,

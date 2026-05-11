@@ -10,11 +10,15 @@ import com.jeffrey.auctionbridge.feature.map.controller.LatLng
 import com.jeffrey.auctionbridge.feature.map.controller.MapController
 import com.jeffrey.auctionbridge.feature.map.state.CityCluster
 import com.jeffrey.auctionbridge.feature.map.state.MapCameraState
+import com.jeffrey.auctionbridge.feature.map.state.MarkerGroup
 import com.jeffrey.auctionbridge.feature.map.state.kakaoLevelToZoom
 import com.jeffrey.auctionbridge.feature.map.state.zoomToKakaoLevel
+import kotlin.math.roundToLong
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -31,18 +35,50 @@ class MapViewModel(
     private var mapController: MapController? = null
 
     init {
-        category?.let { cat ->
+        if (category != null) {
             viewModelScope.launch {
-                auctionRepository.getAuctionItems(cat).collect { items ->
-                    _uiState.update { applyClustering(it.copy(items = items)) }
-                }
+                auctionRepository.getAuctionItems(category)
+                    .catch { e ->
+                        if (e is CancellationException) throw e
+                        _uiState.update {
+                            it.copy(
+                                isLoadingItems = false,
+                                errorMessage = humanReadableError(e),
+                            )
+                        }
+                    }
+                    .collect { items ->
+                        _uiState.update {
+                            applyClustering(
+                                it.copy(
+                                    items = items,
+                                    isLoadingItems = false,
+                                    errorMessage = null,
+                                ),
+                            )
+                        }
+                    }
             }
+        } else {
+            // 알 수 없는 카테고리 — 더 이상 데이터가 오지 않으므로 로딩 종료.
+            _uiState.update { it.copy(isLoadingItems = false) }
         }
         _uiState.update {
             applyClustering(
                 it.copy(cameraState = MapCameraState.Default, locationFallbackUsed = true),
             )
         }
+    }
+
+    /** 사용자가 에러 오버레이를 닫을 때 호출. */
+    fun dismissError() {
+        _uiState.update { it.copy(errorMessage = null) }
+    }
+
+    private fun humanReadableError(e: Throwable): String {
+        val type = e::class.simpleName ?: "Error"
+        val msg = e.message?.takeIf { it.isNotBlank() }
+        return if (msg != null) "$type: $msg" else type
     }
 
     fun onLocationPermissionGranted() {
@@ -60,8 +96,17 @@ class MapViewModel(
         _uiState.update { it.copy(selectedItem = selected) }
     }
 
+    /**
+     * 새 마커 클릭 핸들러 — 좌표 기반 그룹 단위로 선택. 같은 좌표의 N건이 모두
+     * 좌측 패널 리스트에 들어간다.
+     */
+    fun onGroupClick(groupKey: String) {
+        val group = _uiState.value.markerGroups.firstOrNull { it.groupKey == groupKey } ?: return
+        _uiState.update { it.copy(selectedGroup = group, selectedItem = group.items.first()) }
+    }
+
     fun clearSelection() {
-        _uiState.update { it.copy(selectedItem = null) }
+        _uiState.update { it.copy(selectedItem = null, selectedGroup = null) }
     }
 
     fun onMyLocationClick() {
@@ -140,11 +185,51 @@ class MapViewModel(
         val kakaoLevel = zoomToKakaoLevel(state.cameraState.zoom)
         val shouldCluster = kakaoLevel >= CLUSTER_KAKAO_LEVEL_THRESHOLD
         return if (shouldCluster) {
-            state.copy(clusterMode = true, clusters = buildClusters(state.items))
+            state.copy(
+                clusterMode = true,
+                clusters = buildClusters(state.items),
+                // 클러스터 모드일 때는 개별 그룹 마커를 그리지 않으므로 비움.
+                markerGroups = emptyList(),
+            )
         } else {
-            // 클러스터 모드 종료 시 reference equality 보존을 위해 빈 리스트로 명시
-            if (!state.clusterMode && state.clusters.isEmpty()) state
-            else state.copy(clusterMode = false, clusters = emptyList())
+            val newGroups = buildMarkerGroups(state.items)
+            // 현재 선택된 그룹이 새 그룹 목록에 더 이상 없으면 선택 해제.
+            val newSelected = state.selectedGroup?.let { sel ->
+                newGroups.firstOrNull { it.groupKey == sel.groupKey }
+            }
+            state.copy(
+                clusterMode = false,
+                clusters = if (state.clusters.isEmpty()) state.clusters else emptyList(),
+                markerGroups = newGroups,
+                selectedGroup = newSelected,
+            )
+        }
+    }
+
+    /**
+     * 같은 좌표의 매물을 하나의 [MarkerGroup] 으로 묶는다.
+     * 키는 lat/lng 를 [COORD_KEY_DECIMALS] 자리수로 반올림한 값 ─ 서버가 동(洞) 단위로
+     * 동일 좌표를 부여하는 경우 한 단지 내 여러 호실이 한 그룹으로 묶임.
+     */
+    private fun buildMarkerGroups(items: List<AuctionItem>): List<MarkerGroup> {
+        if (items.isEmpty()) return emptyList()
+        val factor = 1.0
+            .let { var f = it; repeat(COORD_KEY_DECIMALS) { f *= 10 }; f }
+        // LinkedHashMap 으로 첫 등장 순서 유지 — 마커 추가/제거 diff 안정성 향상.
+        val grouped = LinkedHashMap<String, MutableList<AuctionItem>>()
+        for (item in items) {
+            val keyLat = (item.latitude * factor).roundToLong()
+            val keyLng = (item.longitude * factor).roundToLong()
+            val key = "${keyLat}_$keyLng"
+            grouped.getOrPut(key) { mutableListOf() }.add(item)
+        }
+        return grouped.map { (key, list) ->
+            MarkerGroup(
+                groupKey = key,
+                latitude = list.first().latitude,
+                longitude = list.first().longitude,
+                items = list.toList(),
+            )
         }
     }
 
@@ -175,5 +260,12 @@ class MapViewModel(
          * level 8 ≈ 약 5km 반경. 시(市) 한두 개가 화면에 들어오는 수준.
          */
         const val CLUSTER_KAKAO_LEVEL_THRESHOLD = 8
+
+        /**
+         * 좌표 그룹핑 키 산출 시 사용할 소수점 자릿수.
+         * 5자리 ≈ 약 1m 정밀도 — 서버가 같은 단지에 부여한 동일 좌표를 한 그룹으로 묶기에 충분하고,
+         * 서로 다른 단지(수십 m 이상 차이)는 분리됨.
+         */
+        private const val COORD_KEY_DECIMALS = 5
     }
 }

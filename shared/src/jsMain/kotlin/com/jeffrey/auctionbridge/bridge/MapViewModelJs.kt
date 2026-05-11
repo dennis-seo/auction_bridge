@@ -51,6 +51,11 @@ class MapViewModelJs internal constructor(
         vm.onMarkerClick(itemId)
     }
 
+    /** 좌표 그룹 마커 클릭 — N건 매물이 모두 좌측 패널에 표시된다. */
+    fun onGroupClick(groupKey: String) {
+        vm.onGroupClick(groupKey)
+    }
+
     fun onMyLocationClick() {
         vm.onMyLocationClick()
     }
@@ -65,6 +70,11 @@ class MapViewModelJs internal constructor(
 
     fun clearSelection() {
         vm.clearSelection()
+    }
+
+    /** 우하단 에러 오버레이 닫기. */
+    fun dismissError() {
+        vm.dismissError()
     }
 
     fun onLocationPermissionGranted() {
