@@ -2,6 +2,7 @@ package com.jeffrey.auctionbridge.feature.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jeffrey.auctionbridge.core.config.AppFlags
 import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
 import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
 import com.jeffrey.auctionbridge.core.domain.repository.AuctionRepository
@@ -26,6 +27,7 @@ class MapViewModel(
     categoryId: String,
     private val auctionRepository: AuctionRepository,
     private val locationProvider: LocationProvider,
+    private val flags: AppFlags,
 ) : ViewModel() {
 
     private val category: AuctionCategory? = AuctionCategory.fromId(categoryId)
@@ -40,10 +42,12 @@ class MapViewModel(
                 auctionRepository.getAuctionItems(category)
                     .catch { e ->
                         if (e is CancellationException) throw e
+                        // 운영 빌드(showErrors=false) 에서는 에러 토스트 노출 안 함 — 지도엔 마커 없이 0건 상태.
+                        val msg = if (flags.showErrors) humanReadableError(e) else null
                         _uiState.update {
                             it.copy(
                                 isLoadingItems = false,
-                                errorMessage = humanReadableError(e),
+                                errorMessage = msg,
                             )
                         }
                     }

@@ -28,6 +28,7 @@ internal val featureModule = module {
             categoryId = categoryId,
             auctionRepository = get(),
             locationProvider = get(),
+            flags = get(),
         )
     }
     factory { (itemId: String) ->

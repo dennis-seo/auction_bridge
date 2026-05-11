@@ -2,6 +2,7 @@ package com.jeffrey.auctionbridge.feature.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.jeffrey.auctionbridge.core.config.AppFlags
 import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
 import com.jeffrey.auctionbridge.core.domain.repository.AuctionRepository
 import kotlinx.coroutines.CancellationException
@@ -15,6 +16,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val auctionRepository: AuctionRepository,
+    private val flags: AppFlags,
 ) : ViewModel() {
 
     private val authState = MutableStateFlow(AuthSnapshot())
@@ -58,7 +60,9 @@ class MainViewModel(
                 statsState.update { it.copy(counts = counts, error = null) }
             } catch (e: Throwable) {
                 if (e is CancellationException) throw e
-                statsState.update { it.copy(error = humanReadableError(e)) }
+                // 운영 빌드(showErrors=false)에서는 에러를 사용자에게 노출하지 않고 조용히 무시 — 카드 카운트는 스켈레톤 유지.
+                val msg = if (flags.showErrors) humanReadableError(e) else null
+                statsState.update { it.copy(error = msg) }
             }
         }
     }

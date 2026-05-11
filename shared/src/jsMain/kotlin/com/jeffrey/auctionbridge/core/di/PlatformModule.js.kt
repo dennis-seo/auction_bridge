@@ -1,5 +1,6 @@
 package com.jeffrey.auctionbridge.core.di
 
+import com.jeffrey.auctionbridge.core.config.AppFlags
 import com.jeffrey.auctionbridge.core.network.ApiBaseUrl
 import com.jeffrey.auctionbridge.core.platform.LocationProvider
 import com.jeffrey.auctionbridge.core.platform.WebLocationProvider
@@ -9,6 +10,7 @@ import org.koin.dsl.module
 actual val platformModule: Module = module {
     single<LocationProvider> { WebLocationProvider() }
     single { ApiBaseUrl(resolveApiBaseUrl()) }
+    single { AppFlags(showErrors = resolveShowErrors()) }
 }
 
 /**
@@ -40,3 +42,26 @@ private fun readGlobalApiBaseUrl(): String? =
         })()
         """,
     ) as String?
+
+/**
+ * 사용자에게 에러를 노출할지 여부 — webApp main.tsx 가 빌드타임 [import.meta.env.PROD] 의
+ * 반대 값을 `globalThis.__AB_SHOW_ERRORS__` 로 셋업 (dev=true, prod=false).
+ *
+ * 미주입(아무도 안 채웠을 때) 시 보수적으로 false — 운영 안전 기본값.
+ */
+private fun resolveShowErrors(): Boolean = readGlobalShowErrors() ?: false
+
+@Suppress("UnsafeCastFromDynamic")
+private fun readGlobalShowErrors(): Boolean? =
+    js(
+        """
+        (function () {
+            try {
+                if (typeof globalThis !== 'undefined' && typeof globalThis.__AB_SHOW_ERRORS__ !== 'undefined') {
+                    return Boolean(globalThis.__AB_SHOW_ERRORS__);
+                }
+            } catch (e) {}
+            return null;
+        })()
+        """,
+    ) as Boolean?

@@ -61,10 +61,13 @@ class RemoteAuctionRepository(
         return out
     }
 
-    override suspend fun getAuctionDetail(id: String): AuctionDetail {
-        return runCatching { api.getAuction(id).toDomain() }
-            .getOrElse { mock.getAuctionDetail(id) }
-    }
+    /**
+     * 매물 상세. **mock fallback 하지 않는다** — 실패는 예외로 호출자에 전파.
+     * (이전엔 서버 실패 시 mock detail 을 합성해 매물 id 와 무관한 분당 아파트가 노출되어
+     *  분석을 헷갈리게 했음.)
+     */
+    override suspend fun getAuctionDetail(id: String): AuctionDetail =
+        api.getAuction(id).toDomain()
 
     /**
      * 서버 호출 결과를 그대로 emit. **mock fallback 하지 않는다** —

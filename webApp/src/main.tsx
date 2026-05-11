@@ -9,11 +9,17 @@ import "./styles/globals.css";
 declare global {
   interface Window {
     __AB_API_BASE_URL__?: string;
+    __AB_SHOW_ERRORS__?: boolean;
   }
 }
 window.__AB_API_BASE_URL__ =
   (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
   "https://auctionbridge-api-ak2wcqba2q-du.a.run.app";
+
+// 사용자에게 에러 토스트/오버레이를 노출할지 결정. dev 빌드에서만 true → 분석 편의,
+// prod 빌드(import.meta.env.PROD) 에서는 false → 조용한 실패 (스켈레톤/빈 상태 유지).
+// shared 모듈의 PlatformModule.js.kt 가 globalThis.__AB_SHOW_ERRORS__ 를 읽어 AppFlags 로 주입.
+window.__AB_SHOW_ERRORS__ = !import.meta.env.PROD;
 
 // 디버깅: 실제로 셋업된 API URL 을 콘솔에 노출.
 // eslint-disable-next-line no-console
