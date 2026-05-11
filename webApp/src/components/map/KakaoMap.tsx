@@ -127,15 +127,6 @@ export function KakaoMap({
     const k = window.kakao?.maps;
     if (!map || !k) return;
 
-    // 디버깅: 들어온 markers prop 의 개수와 샘플 (사용자가 보는 마커가 mock 인지 real 인지 판별).
-    // eslint-disable-next-line no-console
-    console.info(
-      "[AuctionBridge][KakaoMap] markers prop count=",
-      markers.length,
-      "sample(first 5 ids+price)=",
-      markers.slice(0, 5).map((m) => `${m.id}@${m.priceLabel}`).join(" | "),
-    );
-
     // 마커 키 = id + count + price + subInfo — 그룹 내 매물 변화/가격 변화 시 새 마커로 갱신.
     const keyOf = (m: KakaoMarker) =>
       `${m.id}#${m.count ?? 1}#${m.priceLabel}#${m.subInfo ?? ""}`;

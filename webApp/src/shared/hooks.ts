@@ -45,25 +45,7 @@ export function useMapScreen(categoryId: string): {
   useEffect(() => {
     const v = getBridge().createMapViewModel(categoryId);
     setVm(v);
-    const unsub = v.subscribe((s) => {
-      // 디버깅: 매 state 변화에서 items 수 / loading / error 를 콘솔에 노출.
-      // eslint-disable-next-line no-console
-      console.info(
-        "[AuctionBridge][MapState] categoryId=",
-        categoryId,
-        "items=",
-        s.items.length,
-        "isLoadingItems=",
-        s.isLoadingItems,
-        "errorMessage=",
-        s.errorMessage,
-        "clusterMode=",
-        s.clusterMode,
-        "clusters=",
-        s.clusters.length,
-      );
-      setState(s);
-    });
+    const unsub = v.subscribe((s) => setState(s));
     return () => {
       unsub();
       v.dispose();
