@@ -5855,7 +5855,7 @@ var properties_initialized_AuctionFormatters_kt_debex0;
 function _init_properties_AuctionFormatters_kt__yra4re() {
   if (!properties_initialized_AuctionFormatters_kt_debex0) {
     properties_initialized_AuctionFormatters_kt_debex0 = true;
-    LOT_NO_PATTERN = Regex_init_$Create$('^(\uC0B0\\s*)?\\d+(-\\d+)?(\uBC88\uC9C0)?\\s+');
+    LOT_NO_PATTERN = Regex_init_$Create$('^(\uC0B0\\s*)?\\d+(-\\d+)?(\uBC88\uC9C0)?\\s+(?=[\uAC00-\uD7A3])');
   }
 }
 function MapUiState(items, selectedItem, cameraState, isLocationLoading, locationFallbackUsed, clusters, clusterMode, markerGroups, selectedGroup, isLoadingItems, errorMessage) {
