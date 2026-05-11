@@ -15,13 +15,15 @@ actual val platformModule: Module = module {
  * 브라우저 globalThis 에 주입된 `__AB_API_BASE_URL__` 을 읽는다.
  * webApp main.tsx 가 빌드타임 [import.meta.env.VITE_API_BASE_URL] 값을 globalThis 에 셋업.
  *
- * 미주입 시 dev 환경 기본값 (`http://localhost:8000`).
+ * 미주입 시 운영 Cloud Run 서버를 기본값으로 사용 — 별도 환경설정 없이도 dev/prod 양쪽에서 실데이터 노출.
+ * 로컬 백엔드를 띄워 테스트하려면 `webApp/.env.development.local` 에
+ * `VITE_API_BASE_URL=http://localhost:8000` 을 추가해 override.
  */
-private const val DEV_DEFAULT = "http://localhost:8000"
+private const val DEFAULT_API_BASE_URL = "https://auctionbridge-api-ak2wcqba2q-du.a.run.app"
 
 private fun resolveApiBaseUrl(): String {
     val raw = readGlobalApiBaseUrl()
-    return if (raw.isNullOrBlank()) DEV_DEFAULT else raw
+    return if (raw.isNullOrBlank()) DEFAULT_API_BASE_URL else raw
 }
 
 @Suppress("UnsafeCastFromDynamic")

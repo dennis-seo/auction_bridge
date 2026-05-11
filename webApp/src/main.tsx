@@ -4,14 +4,16 @@ import { App } from "./App";
 import "./styles/globals.css";
 
 // Kotlin/JS shared 모듈이 globalThis.__AB_API_BASE_URL__ 을 읽어 ApiBaseUrl 로 사용한다.
-// 빌드타임 환경변수 VITE_API_BASE_URL (Vercel 등) 미설정 시 dev 기본값.
+// 빌드타임 환경변수 VITE_API_BASE_URL (Vercel/.env) 가 우선이고, 미설정 시 운영 Cloud Run 서버를 기본값으로.
+// 로컬 백엔드 사용하려면 webApp/.env.development.local 에 VITE_API_BASE_URL=http://localhost:8000 추가.
 declare global {
   interface Window {
     __AB_API_BASE_URL__?: string;
   }
 }
 window.__AB_API_BASE_URL__ =
-  (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? "http://localhost:8000";
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) ??
+  "https://auctionbridge-api-ak2wcqba2q-du.a.run.app";
 
 const root = document.getElementById("root");
 if (!root) throw new Error("Root element #root not found");
