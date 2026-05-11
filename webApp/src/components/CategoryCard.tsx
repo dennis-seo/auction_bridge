@@ -29,9 +29,18 @@ export function CategoryCard({ info, onClick }: Props) {
         </span>
       )}
       {info.isEnabled && (
-        <span className="absolute right-4 top-4 text-xs text-white/85">
-          현재 {info.ongoingCount.toLocaleString()}건 진행 중
-        </span>
+        info.ongoingCount != null ? (
+          <span className="absolute right-4 top-4 text-xs text-white/85">
+            현재 {info.ongoingCount.toLocaleString()}건 진행 중
+          </span>
+        ) : (
+          // stats 응답 미도착 — 스켈레톤 (회색 알약 + pulse 애니메이션).
+          <span
+            aria-busy="true"
+            aria-label="건수 불러오는 중"
+            className="absolute right-4 top-4 inline-block h-4 w-28 animate-pulse rounded-full bg-white/15"
+          />
+        )
       )}
 
       <div className="mt-2 flex items-end gap-2">

@@ -40,6 +40,11 @@ class MainViewModelJs internal constructor(
         vm.consumeMessage()
     }
 
+    /** 우하단 에러 오버레이 닫기. */
+    fun dismissError() {
+        vm.dismissError()
+    }
+
     /** React 컴포넌트 unmount 시 호출 — 코루틴 정리. */
     fun dispose() {
         scope.cancel()

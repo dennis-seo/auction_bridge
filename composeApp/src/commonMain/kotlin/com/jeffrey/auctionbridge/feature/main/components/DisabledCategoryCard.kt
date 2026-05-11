@@ -75,7 +75,7 @@ internal fun DisabledCategoryCard(
                     fontSize = 16.sp,
                 )
                 Text(
-                    text = "${info.ongoingCount.formatWithComma()}건",
+                    text = info.ongoingCount?.let { "${it.formatWithComma()}건" } ?: "— 건",
                     color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
                     fontSize = 12.sp,
                 )

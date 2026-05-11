@@ -50,9 +50,10 @@ internal fun CategoryCard(
                 )
                 .padding(horizontal = 20.dp, vertical = 18.dp),
         ) {
-            // 우상단: 진행 건수
+            // 우상단: 진행 건수. stats 응답 전엔 "—" placeholder.
             Text(
-                text = "현재 ${info.ongoingCount.formatWithComma()}건 진행 중",
+                text = info.ongoingCount?.let { "현재 ${it.formatWithComma()}건 진행 중" }
+                    ?: "현재 — 건 진행 중",
                 color = Color.White.copy(alpha = 0.9f),
                 fontSize = if (isFeatured) 14.sp else 12.sp,
                 modifier = Modifier.align(Alignment.TopEnd),

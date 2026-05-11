@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useMainScreen } from "../shared/hooks";
 import { MainTopBar } from "../components/MainTopBar";
 import { BentoGrid } from "../components/BentoGrid";
+import { ErrorToast } from "../components/ErrorToast";
 
 export function MainPage() {
   const navigate = useNavigate();
@@ -50,6 +51,14 @@ export function MainPage() {
         <div className="pointer-events-none fixed bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-white/15 px-4 py-2 text-sm text-white backdrop-blur">
           {state.transientMessage}
         </div>
+      )}
+
+      {state.errorMessage && (
+        <ErrorToast
+          title="카테고리 통계 불러오기 실패"
+          message={state.errorMessage}
+          onDismiss={() => vm.dismissError()}
+        />
       )}
     </div>
   );

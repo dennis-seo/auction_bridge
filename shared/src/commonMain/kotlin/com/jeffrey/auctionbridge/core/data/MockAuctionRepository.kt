@@ -32,6 +32,9 @@ class MockAuctionRepository : AuctionRepository {
     override fun getAuctionItems(category: AuctionCategory): Flow<List<AuctionItem>> =
         flowOf(itemsByCategory[category].orEmpty())
 
+    /** mock 에서는 사용처 없음 — 인터페이스 충족용. 실제 카운트는 RemoteAuctionRepository 에서 stats 로 조회. */
+    override suspend fun getCategoryStats(): Map<AuctionCategory, Int> = emptyMap()
+
     override suspend fun getAuctionDetail(id: String): AuctionDetail {
         // 기존 mock 리스트에서 id 매칭, 없으면 첫 번째 아이템으로 합성.
         val item = itemsByCategory.values.flatten().firstOrNull { it.id == id }
@@ -101,7 +104,7 @@ class MockAuctionRepository : AuctionRepository {
                 category = AuctionCategory.APARTMENT,
                 displayName = "아파트",
                 emoji = "🏢",
-                ongoingCount = 1_245,
+                ongoingCount = null,
                 themeColorArgb = ARGB_BLUE_40,
                 isEnabled = true,
                 span = CategorySpan.Featured,
@@ -110,7 +113,7 @@ class MockAuctionRepository : AuctionRepository {
                 category = AuctionCategory.CAR,
                 displayName = "자동차",
                 emoji = "🚗",
-                ongoingCount = 432,
+                ongoingCount = null,
                 themeColorArgb = ARGB_SLATE_GRAY,
                 isEnabled = false,
                 span = CategorySpan.Half,
@@ -119,36 +122,45 @@ class MockAuctionRepository : AuctionRepository {
                 category = AuctionCategory.OFFICE_TEL,
                 displayName = "오피스텔",
                 emoji = "🏬",
-                ongoingCount = 156,
+                ongoingCount = null,
                 themeColorArgb = ARGB_SLATE_GRAY,
-                isEnabled = false,
+                isEnabled = true,
+                span = CategorySpan.Half,
+            ),
+            CategoryInfo(
+                category = AuctionCategory.VILLA,
+                displayName = "빌라/연립",
+                emoji = "🏘️",
+                ongoingCount = null,
+                themeColorArgb = ARGB_SLATE_GRAY,
+                isEnabled = true,
                 span = CategorySpan.Half,
             ),
             CategoryInfo(
                 category = AuctionCategory.HOUSE,
                 displayName = "주택",
                 emoji = "🏠",
-                ongoingCount = 287,
+                ongoingCount = null,
                 themeColorArgb = ARGB_SLATE_GRAY,
-                isEnabled = false,
+                isEnabled = true,
                 span = CategorySpan.Half,
             ),
             CategoryInfo(
                 category = AuctionCategory.STORE,
                 displayName = "상가",
                 emoji = "🏪",
-                ongoingCount = 198,
+                ongoingCount = null,
                 themeColorArgb = ARGB_SLATE_GRAY,
-                isEnabled = false,
+                isEnabled = true,
                 span = CategorySpan.Half,
             ),
             CategoryInfo(
                 category = AuctionCategory.LAND,
                 displayName = "토지",
                 emoji = "🌿",
-                ongoingCount = 521,
+                ongoingCount = null,
                 themeColorArgb = ARGB_SLATE_GRAY,
-                isEnabled = false,
+                isEnabled = true,
                 span = CategorySpan.Wide,
             ),
         )

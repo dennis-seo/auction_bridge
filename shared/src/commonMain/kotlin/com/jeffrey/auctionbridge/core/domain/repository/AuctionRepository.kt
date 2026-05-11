@@ -24,4 +24,10 @@ interface AuctionRepository {
      * @throws Exception 네트워크/직렬화 오류 — ViewModel 측에서 잡아 UI 상태에 반영.
      */
     suspend fun getAuctionDetail(id: String): AuctionDetail
+
+    /**
+     * 카테고리별 진행 건수 — 메인 카드의 "진행 중 N건" 갱신용.
+     * @throws Exception 네트워크/직렬화 오류 — ViewModel 이 잡아 우하단 에러 토스트로 노출.
+     */
+    suspend fun getCategoryStats(): Map<AuctionCategory, Int>
 }

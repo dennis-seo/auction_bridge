@@ -2,6 +2,7 @@ package com.jeffrey.auctionbridge.core.network
 
 import com.jeffrey.auctionbridge.core.network.dto.AuctionDetailDto
 import com.jeffrey.auctionbridge.core.network.dto.AuctionListResponse
+import com.jeffrey.auctionbridge.core.network.dto.AuctionStatsResponseDto
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -55,6 +56,10 @@ class AuctionApi(
     /** GET /api/v1/auctions/{id} — 매물 상세. */
     suspend fun getAuction(id: String): AuctionDetailDto =
         client.get("${baseUrl.value}/api/v1/auctions/$id").body()
+
+    /** GET /api/v1/auctions/stats — 자산타입/카테고리별 진행 건수 (메인 카드 카운트용). */
+    suspend fun getStats(): AuctionStatsResponseDto =
+        client.get("${baseUrl.value}/api/v1/auctions/stats").body()
 }
 
 internal fun defaultClient(): HttpClient = HttpClient {
