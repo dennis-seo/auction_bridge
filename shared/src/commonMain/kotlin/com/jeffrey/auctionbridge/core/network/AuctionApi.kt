@@ -144,6 +144,9 @@ class AuctionApi(
 }
 
 internal fun defaultClient(): HttpClient = HttpClient {
+    // non-2xx 는 예외로 — 끄면 4xx 의 {"detail": ...} 가 기본값만 채운 목록 DTO 로
+    // 역직렬화돼 에러가 "0건" 정상 응답처럼 보인다.
+    expectSuccess = true
     install(ContentNegotiation) {
         json(
             Json {
