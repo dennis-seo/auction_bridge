@@ -40,12 +40,12 @@ function get_viewModelScope(_this__u8e3s4) {
   // Inline function 'kotlin.contracts.contract' call
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronizedImpl' call
   get_VIEW_MODEL_SCOPE_LOCK();
-  var tmp0_elvis_lhs = _this__u8e3s4.f20('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY');
+  var tmp0_elvis_lhs = _this__u8e3s4.x20('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY');
   var tmp;
   if (tmp0_elvis_lhs == null) {
     // Inline function 'kotlin.also' call
     var this_0 = createViewModelScope();
-    _this__u8e3s4.g20('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY', this_0);
+    _this__u8e3s4.y20('androidx.lifecycle.viewmodel.internal.ViewModelCoroutineScope.JOB_KEY', this_0);
     tmp = this_0;
   } else {
     tmp = tmp0_elvis_lhs;
@@ -60,18 +60,18 @@ function _init_properties_ViewModel_kt__8pkmem() {
   }
 }
 function CloseableCoroutineScope(coroutineContext) {
-  this.h20_1 = coroutineContext;
+  this.z20_1 = coroutineContext;
 }
-protoOf(CloseableCoroutineScope).xn = function () {
-  return this.h20_1;
+protoOf(CloseableCoroutineScope).po = function () {
+  return this.z20_1;
 };
 protoOf(CloseableCoroutineScope).z3 = function () {
-  return cancel(this.h20_1);
+  return cancel(this.z20_1);
 };
 function createViewModelScope() {
   var tmp;
   try {
-    tmp = Dispatchers_getInstance().oz().iz();
+    tmp = Dispatchers_getInstance().g10().a10();
   } catch ($p) {
     var tmp_0;
     if ($p instanceof NotImplementedError) {
@@ -88,7 +88,7 @@ function createViewModelScope() {
     tmp = tmp_0;
   }
   var dispatcher = tmp;
-  return new CloseableCoroutineScope(dispatcher.vh(SupervisorJob()));
+  return new CloseableCoroutineScope(dispatcher.yh(SupervisorJob()));
 }
 function ViewModelImpl_init_$Init$($this) {
   ViewModelImpl.call($this);
@@ -113,46 +113,46 @@ function closeWithRuntimeException($this, closeable) {
     }
   }
 }
-protoOf(ViewModelImpl).g20 = function (key, closeable) {
-  if (this.l20_1) {
+protoOf(ViewModelImpl).y20 = function (key, closeable) {
+  if (this.d21_1) {
     closeWithRuntimeException(this, closeable);
     return Unit_instance;
   }
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronized' call
   // Inline function 'kotlin.contracts.contract' call
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronizedImpl' call
-  this.i20_1;
-  var oldCloseable = this.j20_1.h2(key, closeable);
+  this.a21_1;
+  var oldCloseable = this.b21_1.h2(key, closeable);
   closeWithRuntimeException(this, oldCloseable);
 };
-protoOf(ViewModelImpl).f20 = function (key) {
+protoOf(ViewModelImpl).x20 = function (key) {
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronized' call
   // Inline function 'kotlin.contracts.contract' call
   // Inline function 'androidx.lifecycle.viewmodel.internal.synchronizedImpl' call
-  this.i20_1;
-  var tmp = this.j20_1.e2(key);
+  this.a21_1;
+  var tmp = this.b21_1.e2(key);
   return (tmp == null ? true : isInterface(tmp, AutoCloseable)) ? tmp : THROW_CCE();
 };
 function ViewModelImpl() {
-  this.i20_1 = new SynchronizedObject();
+  this.a21_1 = new SynchronizedObject();
   var tmp = this;
   // Inline function 'kotlin.collections.mutableMapOf' call
-  tmp.j20_1 = LinkedHashMap_init_$Create$();
+  tmp.b21_1 = LinkedHashMap_init_$Create$();
   var tmp_0 = this;
   // Inline function 'kotlin.collections.mutableSetOf' call
-  tmp_0.k20_1 = LinkedHashSet_init_$Create$();
-  this.l20_1 = false;
+  tmp_0.c21_1 = LinkedHashSet_init_$Create$();
+  this.d21_1 = false;
 }
 function ViewModel_init_$Init$($this) {
   ViewModel.call($this);
-  $this.e20_1 = ViewModelImpl_init_$Create$();
+  $this.w20_1 = ViewModelImpl_init_$Create$();
   return $this;
 }
-protoOf(ViewModel).g20 = function (key, closeable) {
-  this.e20_1.g20(key, closeable);
+protoOf(ViewModel).y20 = function (key, closeable) {
+  this.w20_1.y20(key, closeable);
 };
-protoOf(ViewModel).f20 = function (key) {
-  return this.e20_1.f20(key);
+protoOf(ViewModel).x20 = function (key) {
+  return this.w20_1.x20(key);
 };
 function ViewModel() {
 }

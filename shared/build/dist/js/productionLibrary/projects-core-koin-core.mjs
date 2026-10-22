@@ -83,35 +83,35 @@ initMetadataForObject(GlobalContext, 'GlobalContext');
 initMetadataForObject(KoinPlatformTools, 'KoinPlatformTools');
 //endregion
 function Koin() {
-  this.s5l_1 = new ScopeRegistry(this);
-  this.t5l_1 = new InstanceRegistry(this);
-  this.u5l_1 = new PropertyRegistry(this);
-  this.v5l_1 = new ExtensionManager(this);
-  this.w5l_1 = new EmptyLogger();
+  this.k5m_1 = new ScopeRegistry(this);
+  this.l5m_1 = new InstanceRegistry(this);
+  this.m5m_1 = new PropertyRegistry(this);
+  this.n5m_1 = new ExtensionManager(this);
+  this.o5m_1 = new EmptyLogger();
 }
-protoOf(Koin).x5l = function (modules, allowOverride, createEagerInstances) {
+protoOf(Koin).p5m = function (modules, allowOverride, createEagerInstances) {
   var flattedModules = flatten(modules);
-  this.t5l_1.b5m(flattedModules, allowOverride);
-  this.s5l_1.g5m(flattedModules);
+  this.l5m_1.t5m(flattedModules, allowOverride);
+  this.k5m_1.y5m(flattedModules);
   if (createEagerInstances) {
-    this.h5m();
+    this.z5m();
   }
 };
-protoOf(Koin).h5m = function () {
-  this.w5l_1.j5m('Create eager instances ...');
+protoOf(Koin).z5m = function () {
+  this.o5m_1.b5n('Create eager instances ...');
   // Inline function 'kotlin.time.measureTime' call
   // Inline function 'kotlin.time.measureTime' call
-  var mark = Monotonic_instance.ne();
-  this.t5l_1.k5m();
+  var mark = Monotonic_instance.qe();
+  this.l5m_1.c5n();
   var duration = ValueTimeMark__elapsedNow_impl_eonqvs(mark);
-  this.w5l_1.j5m('Created eager instances in ' + get_inMs(duration) + ' ms');
+  this.o5m_1.b5n('Created eager instances in ' + get_inMs(duration) + ' ms');
 };
 function loadModules($this, modules) {
-  $this.l5m_1.x5l(modules, $this.m5m_1, false);
+  $this.d5n_1.p5m(modules, $this.e5n_1, false);
 }
 function Companion() {
 }
-protoOf(Companion).n5m = function () {
+protoOf(Companion).f5n = function () {
   var app = new KoinApplication();
   return app;
 };
@@ -120,28 +120,28 @@ function Companion_getInstance_0() {
   return Companion_instance;
 }
 function KoinApplication() {
-  this.l5m_1 = new Koin();
-  this.m5m_1 = true;
+  this.d5n_1 = new Koin();
+  this.e5n_1 = true;
 }
-protoOf(KoinApplication).o5m = function (modules) {
-  var tmp0 = this.l5m_1.w5l_1;
+protoOf(KoinApplication).g5n = function (modules) {
+  var tmp0 = this.d5n_1.o5m_1;
   // Inline function 'org.koin.core.logger.Logger.isAt' call
   var lvl = Level_INFO_getInstance();
-  if (tmp0.i5m_1.m2(lvl) <= 0) {
+  if (tmp0.a5n_1.m2(lvl) <= 0) {
     // Inline function 'kotlin.time.measureTime' call
     // Inline function 'kotlin.time.measureTime' call
-    var mark = Monotonic_instance.ne();
+    var mark = Monotonic_instance.qe();
     loadModules(this, modules);
     var duration = ValueTimeMark__elapsedNow_impl_eonqvs(mark);
-    var count = this.l5m_1.t5l_1.p5m();
-    this.l5m_1.w5l_1.q5m(Level_INFO_getInstance(), 'Started ' + count + ' definitions in ' + get_inMs(duration) + ' ms');
+    var count = this.d5n_1.l5m_1.h5n();
+    this.d5n_1.o5m_1.i5n(Level_INFO_getInstance(), 'Started ' + count + ' definitions in ' + get_inMs(duration) + ' ms');
   } else {
     loadModules(this, modules);
   }
   return this;
 };
 function startKoin(appDeclaration) {
-  return KoinPlatformTools_instance.r5m().s5m(appDeclaration);
+  return KoinPlatformTools_instance.j5n().k5n(appDeclaration);
 }
 function BeanDefinition$toString$lambda(it) {
   return getFullName(it);
@@ -156,36 +156,36 @@ function BeanDefinition(scopeQualifier, primaryType, qualifier, definition, kind
     tmp = secondaryTypes;
   }
   secondaryTypes = tmp;
-  this.t5m_1 = scopeQualifier;
-  this.u5m_1 = primaryType;
-  this.v5m_1 = qualifier;
-  this.w5m_1 = definition;
-  this.x5m_1 = kind;
-  this.y5m_1 = secondaryTypes;
-  this.z5m_1 = new Callbacks();
-  this.a5n_1 = false;
+  this.l5n_1 = scopeQualifier;
+  this.m5n_1 = primaryType;
+  this.n5n_1 = qualifier;
+  this.o5n_1 = definition;
+  this.p5n_1 = kind;
+  this.q5n_1 = secondaryTypes;
+  this.r5n_1 = new Callbacks();
+  this.s5n_1 = false;
 }
 protoOf(BeanDefinition).toString = function () {
   // Inline function 'kotlin.text.buildString' call
   // Inline function 'kotlin.apply' call
   var this_0 = StringBuilder_init_$Create$();
   this_0.c8(_Char___init__impl__6a9atx(91));
-  this_0.a8(this.x5m_1);
+  this_0.a8(this.p5n_1);
   this_0.b8(": '");
-  this_0.b8(getFullName(this.u5m_1));
+  this_0.b8(getFullName(this.m5n_1));
   this_0.c8(_Char___init__impl__6a9atx(39));
-  if (!(this.v5m_1 == null)) {
+  if (!(this.n5n_1 == null)) {
     this_0.b8(',qualifier:');
-    this_0.a8(this.v5m_1);
+    this_0.a8(this.n5n_1);
   }
-  if (!equals(this.t5m_1, Companion_getInstance_2().c5n_1)) {
+  if (!equals(this.l5n_1, Companion_getInstance_2().u5n_1)) {
     this_0.b8(',scope:');
-    this_0.a8(this.t5m_1);
+    this_0.a8(this.l5n_1);
   }
   // Inline function 'kotlin.collections.isNotEmpty' call
-  if (!this.y5m_1.p()) {
+  if (!this.q5n_1.p()) {
     this_0.b8(',binds:');
-    var tmp = this.y5m_1;
+    var tmp = this.q5n_1;
     joinTo(tmp, this_0, ',', VOID, VOID, VOID, VOID, BeanDefinition$toString$lambda);
   }
   this_0.c8(_Char___init__impl__6a9atx(93));
@@ -196,20 +196,20 @@ protoOf(BeanDefinition).equals = function (other) {
     return true;
   if (!(other instanceof BeanDefinition))
     THROW_CCE();
-  if (!this.u5m_1.equals(other.u5m_1))
+  if (!this.m5n_1.equals(other.m5n_1))
     return false;
-  if (!equals(this.v5m_1, other.v5m_1))
+  if (!equals(this.n5n_1, other.n5n_1))
     return false;
-  if (!equals(this.t5m_1, other.t5m_1))
+  if (!equals(this.l5n_1, other.l5n_1))
     return false;
   return true;
 };
 protoOf(BeanDefinition).hashCode = function () {
-  var tmp0_safe_receiver = this.v5m_1;
+  var tmp0_safe_receiver = this.n5n_1;
   var tmp1_elvis_lhs = tmp0_safe_receiver == null ? null : hashCode(tmp0_safe_receiver);
   var result = tmp1_elvis_lhs == null ? 0 : tmp1_elvis_lhs;
-  result = imul(31, result) + this.u5m_1.hashCode() | 0;
-  result = imul(31, result) + hashCode(this.t5m_1) | 0;
+  result = imul(31, result) + this.m5n_1.hashCode() | 0;
+  result = imul(31, result) + hashCode(this.l5n_1) | 0;
   return result;
 };
 var Kind_Singleton_instance;
@@ -237,13 +237,13 @@ function Kind_Factory_getInstance() {
 }
 function Callbacks(onClose) {
   onClose = onClose === VOID ? null : onClose;
-  this.d5n_1 = onClose;
+  this.v5n_1 = onClose;
 }
 protoOf(Callbacks).toString = function () {
-  return 'Callbacks(onClose=' + toString(this.d5n_1) + ')';
+  return 'Callbacks(onClose=' + toString(this.v5n_1) + ')';
 };
 protoOf(Callbacks).hashCode = function () {
-  return this.d5n_1 == null ? 0 : hashCode(this.d5n_1);
+  return this.v5n_1 == null ? 0 : hashCode(this.v5n_1);
 };
 protoOf(Callbacks).equals = function (other) {
   if (this === other)
@@ -251,20 +251,20 @@ protoOf(Callbacks).equals = function (other) {
   if (!(other instanceof Callbacks))
     return false;
   var tmp0_other_with_cast = other instanceof Callbacks ? other : THROW_CCE();
-  if (!equals(this.d5n_1, tmp0_other_with_cast.d5n_1))
+  if (!equals(this.v5n_1, tmp0_other_with_cast.v5n_1))
     return false;
   return true;
 };
 function KoinDefinition(module_0, factory) {
-  this.e5n_1 = module_0;
-  this.f5n_1 = factory;
+  this.w5n_1 = module_0;
+  this.x5n_1 = factory;
 }
 protoOf(KoinDefinition).toString = function () {
-  return 'KoinDefinition(module=' + toString_0(this.e5n_1) + ', factory=' + toString_0(this.f5n_1) + ')';
+  return 'KoinDefinition(module=' + toString_0(this.w5n_1) + ', factory=' + toString_0(this.x5n_1) + ')';
 };
 protoOf(KoinDefinition).hashCode = function () {
-  var result = this.e5n_1.hashCode();
-  result = imul(result, 31) + hashCode(this.f5n_1) | 0;
+  var result = this.w5n_1.hashCode();
+  result = imul(result, 31) + hashCode(this.x5n_1) | 0;
   return result;
 };
 protoOf(KoinDefinition).equals = function (other) {
@@ -273,9 +273,9 @@ protoOf(KoinDefinition).equals = function (other) {
   if (!(other instanceof KoinDefinition))
     return false;
   var tmp0_other_with_cast = other instanceof KoinDefinition ? other : THROW_CCE();
-  if (!this.e5n_1.equals(tmp0_other_with_cast.e5n_1))
+  if (!this.w5n_1.equals(tmp0_other_with_cast.w5n_1))
     return false;
-  if (!equals(this.f5n_1, tmp0_other_with_cast.f5n_1))
+  if (!equals(this.x5n_1, tmp0_other_with_cast.x5n_1))
     return false;
   return true;
 };
@@ -304,39 +304,39 @@ function NoParameterFoundException(msg) {
   captureStack(this, NoParameterFoundException);
 }
 function ExtensionManager(_koin) {
-  this.g5n_1 = _koin;
+  this.y5n_1 = _koin;
   var tmp = this;
   // Inline function 'kotlin.collections.hashMapOf' call
-  tmp.h5n_1 = HashMap_init_$Create$();
+  tmp.z5n_1 = HashMap_init_$Create$();
 }
 function FactoryInstanceFactory(beanDefinition) {
   InstanceFactory.call(this, beanDefinition);
 }
-protoOf(FactoryInstanceFactory).j5n = function (context) {
-  return this.l5n(context);
+protoOf(FactoryInstanceFactory).b5o = function (context) {
+  return this.d5o(context);
 };
 function Companion_0() {
-  this.m5n_1 = '\n\t';
+  this.e5o_1 = '\n\t';
 }
 var Companion_instance_0;
 function Companion_getInstance_1() {
   return Companion_instance_0;
 }
 function InstanceFactory(beanDefinition) {
-  this.k5n_1 = beanDefinition;
+  this.c5o_1 = beanDefinition;
 }
-protoOf(InstanceFactory).l5n = function (context) {
-  context.n5n_1.j5m("| (+) '" + this.k5n_1.toString() + "'");
+protoOf(InstanceFactory).d5o = function (context) {
+  context.f5o_1.b5n("| (+) '" + this.c5o_1.toString() + "'");
   try {
-    var tmp0_elvis_lhs = context.r5n_1;
+    var tmp0_elvis_lhs = context.j5o_1;
     var parameters = tmp0_elvis_lhs == null ? emptyParametersHolder() : tmp0_elvis_lhs;
-    return this.k5n_1.w5m_1(context.o5n_1, parameters);
+    return this.c5o_1.o5n_1(context.g5o_1, parameters);
   } catch ($p) {
     if ($p instanceof Exception) {
       var e = $p;
-      var stack = KoinPlatformTools_instance.t5n(e);
-      context.n5n_1.u5n("* Instance creation error : could not create instance for '" + this.k5n_1.toString() + "': " + stack);
-      throw new InstanceCreationException("Could not create instance for '" + this.k5n_1.toString() + "'", e);
+      var stack = KoinPlatformTools_instance.l5o(e);
+      context.f5o_1.m5o("* Instance creation error : could not create instance for '" + this.c5o_1.toString() + "': " + stack);
+      throw new InstanceCreationException("Could not create instance for '" + this.c5o_1.toString() + "'", e);
     } else {
       throw $p;
     }
@@ -345,17 +345,17 @@ protoOf(InstanceFactory).l5n = function (context) {
 function ResolutionContext(logger, scope, clazz, qualifier, parameters) {
   qualifier = qualifier === VOID ? null : qualifier;
   parameters = parameters === VOID ? null : parameters;
-  this.n5n_1 = logger;
-  this.o5n_1 = scope;
-  this.p5n_1 = clazz;
-  this.q5n_1 = qualifier;
-  this.r5n_1 = parameters;
-  this.s5n_1 = "t:'" + getFullName(this.p5n_1) + "' - q:'" + toString(this.q5n_1) + "'";
+  this.f5o_1 = logger;
+  this.g5o_1 = scope;
+  this.h5o_1 = clazz;
+  this.i5o_1 = qualifier;
+  this.j5o_1 = parameters;
+  this.k5o_1 = "t:'" + getFullName(this.h5o_1) + "' - q:'" + toString(this.i5o_1) + "'";
 }
 function NoClass() {
 }
 function getValue($this) {
-  var tmp0_elvis_lhs = $this.w5n_1;
+  var tmp0_elvis_lhs = $this.o5o_1;
   var tmp;
   if (tmp0_elvis_lhs == null) {
     var message = "Single instance created couldn't return value";
@@ -368,8 +368,8 @@ function getValue($this) {
 function SingleInstanceFactory$get$lambda(this$0, $context) {
   return function () {
     var tmp;
-    if (!this$0.x5n($context)) {
-      this$0.w5n_1 = this$0.l5n($context);
+    if (!this$0.p5o($context)) {
+      this$0.o5o_1 = this$0.d5o($context);
       tmp = Unit_instance;
     }
     return Unit_instance;
@@ -377,47 +377,47 @@ function SingleInstanceFactory$get$lambda(this$0, $context) {
 }
 function SingleInstanceFactory(beanDefinition) {
   InstanceFactory.call(this, beanDefinition);
-  this.w5n_1 = null;
+  this.o5o_1 = null;
 }
-protoOf(SingleInstanceFactory).x5n = function (context) {
-  return !(this.w5n_1 == null);
+protoOf(SingleInstanceFactory).p5o = function (context) {
+  return !(this.o5o_1 == null);
 };
-protoOf(SingleInstanceFactory).l5n = function (context) {
+protoOf(SingleInstanceFactory).d5o = function (context) {
   var tmp;
-  if (this.w5n_1 == null) {
-    tmp = protoOf(InstanceFactory).l5n.call(this, context);
+  if (this.o5o_1 == null) {
+    tmp = protoOf(InstanceFactory).d5o.call(this, context);
   } else {
     tmp = getValue(this);
   }
   return tmp;
 };
-protoOf(SingleInstanceFactory).j5n = function (context) {
+protoOf(SingleInstanceFactory).b5o = function (context) {
   var tmp = KoinPlatformTools_instance;
-  tmp.y5n(this, SingleInstanceFactory$get$lambda(this, context));
+  tmp.q5o(this, SingleInstanceFactory$get$lambda(this, context));
   return getValue(this);
 };
 function EmptyLogger() {
   Logger.call(this, Level_NONE_getInstance());
 }
-protoOf(EmptyLogger).q5m = function (level, msg) {
+protoOf(EmptyLogger).i5n = function (level, msg) {
 };
 function Logger(level) {
   level = level === VOID ? Level_INFO_getInstance() : level;
-  this.i5m_1 = level;
+  this.a5n_1 = level;
 }
-protoOf(Logger).j5m = function (msg) {
-  this.b5o(Level_DEBUG_getInstance(), msg);
+protoOf(Logger).b5n = function (msg) {
+  this.t5o(Level_DEBUG_getInstance(), msg);
 };
-protoOf(Logger).a5o = function (msg) {
-  this.b5o(Level_WARNING_getInstance(), msg);
+protoOf(Logger).s5o = function (msg) {
+  this.t5o(Level_WARNING_getInstance(), msg);
 };
-protoOf(Logger).u5n = function (msg) {
-  this.b5o(Level_ERROR_getInstance(), msg);
+protoOf(Logger).m5o = function (msg) {
+  this.t5o(Level_ERROR_getInstance(), msg);
 };
-protoOf(Logger).b5o = function (lvl, msg) {
+protoOf(Logger).t5o = function (lvl, msg) {
   // Inline function 'org.koin.core.logger.Logger.isAt' call
-  if (this.i5m_1.m2(lvl) <= 0) {
-    this.q5m(lvl, msg);
+  if (this.a5n_1.m2(lvl) <= 0) {
+    this.i5n(lvl, msg);
   }
 };
 var Level_DEBUG_instance;
@@ -461,21 +461,21 @@ function Level_NONE_getInstance() {
 }
 function Module(_createdAtStart) {
   _createdAtStart = _createdAtStart === VOID ? false : _createdAtStart;
-  this.c5o_1 = _createdAtStart;
-  this.d5o_1 = generateId(KoinPlatformTools_instance);
-  this.e5o_1 = LinkedHashSet_init_$Create$();
-  this.f5o_1 = LinkedHashMap_init_$Create$();
-  this.g5o_1 = LinkedHashSet_init_$Create$();
+  this.u5o_1 = _createdAtStart;
+  this.v5o_1 = generateId(KoinPlatformTools_instance);
+  this.w5o_1 = LinkedHashSet_init_$Create$();
+  this.x5o_1 = LinkedHashMap_init_$Create$();
+  this.y5o_1 = LinkedHashSet_init_$Create$();
   var tmp = this;
   // Inline function 'kotlin.collections.mutableListOf' call
-  tmp.h5o_1 = ArrayList_init_$Create$();
+  tmp.z5o_1 = ArrayList_init_$Create$();
 }
-protoOf(Module).i5o = function (instanceFactory) {
-  var def = instanceFactory.k5n_1;
-  var tmp0 = def.u5m_1;
-  var tmp2 = def.v5m_1;
+protoOf(Module).a5p = function (instanceFactory) {
+  var def = instanceFactory.c5o_1;
+  var tmp0 = def.m5n_1;
+  var tmp2 = def.n5n_1;
   // Inline function 'org.koin.core.definition.indexKey' call
-  var scopeQualifier = def.t5m_1;
+  var scopeQualifier = def.l5n_1;
   // Inline function 'kotlin.text.buildString' call
   // Inline function 'kotlin.apply' call
   var this_0 = StringBuilder_init_$Create$();
@@ -486,17 +486,17 @@ protoOf(Module).i5o = function (instanceFactory) {
   this_0.c8(_Char___init__impl__6a9atx(58));
   this_0.a8(scopeQualifier);
   var mapping = this_0.toString();
-  this.j5o(mapping, instanceFactory);
+  this.b5p(mapping, instanceFactory);
 };
-protoOf(Module).k5o = function (instanceFactory) {
-  var def = instanceFactory.k5n_1;
+protoOf(Module).c5p = function (instanceFactory) {
+  var def = instanceFactory.c5o_1;
   // Inline function 'kotlin.collections.forEach' call
-  var _iterator__ex2g4s = def.y5m_1.j();
+  var _iterator__ex2g4s = def.q5n_1.j();
   while (_iterator__ex2g4s.k()) {
     var element = _iterator__ex2g4s.l();
-    var tmp2 = def.v5m_1;
+    var tmp2 = def.n5n_1;
     // Inline function 'org.koin.core.definition.indexKey' call
-    var scopeQualifier = def.t5m_1;
+    var scopeQualifier = def.l5n_1;
     // Inline function 'kotlin.text.buildString' call
     // Inline function 'kotlin.apply' call
     var this_0 = StringBuilder_init_$Create$();
@@ -507,25 +507,25 @@ protoOf(Module).k5o = function (instanceFactory) {
     this_0.c8(_Char___init__impl__6a9atx(58));
     this_0.a8(scopeQualifier);
     var mapping = this_0.toString();
-    this.j5o(mapping, instanceFactory);
+    this.b5p(mapping, instanceFactory);
   }
 };
-protoOf(Module).l5o = function (instanceFactory) {
-  this.e5o_1.e(instanceFactory);
+protoOf(Module).d5p = function (instanceFactory) {
+  this.w5o_1.e(instanceFactory);
 };
-protoOf(Module).j5o = function (mapping, factory) {
+protoOf(Module).b5p = function (mapping, factory) {
   // Inline function 'kotlin.collections.set' call
-  this.f5o_1.h2(mapping, factory);
+  this.x5o_1.h2(mapping, factory);
 };
 protoOf(Module).equals = function (other) {
   if (this === other)
     return true;
   if (!(other instanceof Module))
     return false;
-  return this.d5o_1 === other.d5o_1;
+  return this.v5o_1 === other.v5o_1;
 };
 protoOf(Module).hashCode = function () {
-  return getStringHashCode(this.d5o_1);
+  return getStringHashCode(this.v5o_1);
 };
 function flatten(modules) {
   // Inline function 'kotlin.collections.linkedSetOf' call
@@ -536,11 +536,11 @@ function flatten(modules) {
     if (!!stack.p()) {
       break $l$loop_0;
     }
-    var current = stack.zf();
+    var current = stack.cg();
     if (!flatten.e(current)) {
       continue $l$loop_0;
     }
-    var _iterator__ex2g4s = current.h5o_1.j();
+    var _iterator__ex2g4s = current.z5o_1.j();
     while (_iterator__ex2g4s.k()) {
       var module_0 = _iterator__ex2g4s.l();
       if (!flatten.u1(module_0)) {
@@ -552,38 +552,38 @@ function flatten(modules) {
   return flatten;
 }
 function overrideError(factory, mapping) {
-  throw new DefinitionOverrideException('Already existing definition for ' + factory.k5n_1.toString() + ' at ' + mapping);
+  throw new DefinitionOverrideException('Already existing definition for ' + factory.c5o_1.toString() + ' at ' + mapping);
 }
 function onOptions(_this__u8e3s4, options) {
   options = options === VOID ? null : options;
   if (!(options == null)) {
     // Inline function 'org.koin.core.module.dsl.withOptions' call
-    var def = _this__u8e3s4.f5n_1.k5n_1;
-    var primary = def.v5m_1;
+    var def = _this__u8e3s4.x5n_1.c5o_1;
+    var primary = def.n5n_1;
     // Inline function 'kotlin.also' call
     options(def);
-    if (!equals(def.v5m_1, primary)) {
-      _this__u8e3s4.e5n_1.i5o(_this__u8e3s4.f5n_1);
+    if (!equals(def.n5n_1, primary)) {
+      _this__u8e3s4.w5n_1.a5p(_this__u8e3s4.x5n_1);
     }
     // Inline function 'kotlin.collections.isNotEmpty' call
-    if (!def.y5m_1.p()) {
-      _this__u8e3s4.e5n_1.k5o(_this__u8e3s4.f5n_1);
+    if (!def.q5n_1.p()) {
+      _this__u8e3s4.w5n_1.c5p(_this__u8e3s4.x5n_1);
     }
     var tmp;
-    if (def.a5n_1) {
-      var tmp_0 = _this__u8e3s4.f5n_1;
+    if (def.s5n_1) {
+      var tmp_0 = _this__u8e3s4.x5n_1;
       tmp = tmp_0 instanceof SingleInstanceFactory;
     } else {
       tmp = false;
     }
     if (tmp) {
-      _this__u8e3s4.e5n_1.l5o(_this__u8e3s4.f5n_1);
+      _this__u8e3s4.w5n_1.d5p(_this__u8e3s4.x5n_1);
     }
   }
   return _this__u8e3s4;
 }
 function getFirstValue($this, clazz) {
-  var tmp0 = $this.m5o_1;
+  var tmp0 = $this.e5p_1;
   var tmp$ret$1;
   $l$block: {
     // Inline function 'kotlin.collections.firstOrNull' call
@@ -602,7 +602,7 @@ function getFirstValue($this, clazz) {
 }
 function getIndexedValue($this, clazz) {
   // Inline function 'kotlin.takeIf' call
-  var this_0 = $this.m5o_1.o($this.o5o_1);
+  var this_0 = $this.e5p_1.o($this.g5p_1);
   var tmp;
   if (clazz.ta(this_0)) {
     tmp = this_0;
@@ -612,7 +612,7 @@ function getIndexedValue($this, clazz) {
   var tmp_0 = tmp;
   var currentValue = (tmp_0 == null ? true : !(tmp_0 == null)) ? tmp_0 : null;
   if (!(currentValue == null)) {
-    $this.p5o();
+    $this.h5p();
   }
   return currentValue;
 }
@@ -626,27 +626,27 @@ function ParametersHolder(_values, useIndexedValues) {
   }
   _values = tmp;
   useIndexedValues = useIndexedValues === VOID ? null : useIndexedValues;
-  this.m5o_1 = _values;
-  this.n5o_1 = useIndexedValues;
-  this.o5o_1 = 0;
+  this.e5p_1 = _values;
+  this.f5p_1 = useIndexedValues;
+  this.g5p_1 = 0;
 }
-protoOf(ParametersHolder).q5o = function (i, clazz) {
+protoOf(ParametersHolder).i5p = function (i, clazz) {
   var tmp;
-  if (i < this.m5o_1.m()) {
-    var tmp_0 = this.m5o_1.o(i);
+  if (i < this.e5p_1.m()) {
+    var tmp_0 = this.e5p_1.o(i);
     tmp = (tmp_0 == null ? true : !(tmp_0 == null)) ? tmp_0 : THROW_CCE();
   } else {
     throw new NoParameterFoundException("Can't get injected parameter #" + i + ' from ' + this.toString() + " for type '" + getFullName(clazz) + "'");
   }
   return tmp;
 };
-protoOf(ParametersHolder).r5o = function (clazz) {
+protoOf(ParametersHolder).j5p = function (clazz) {
   var tmp;
-  if (this.m5o_1.p()) {
+  if (this.e5p_1.p()) {
     tmp = null;
   } else {
     var tmp_0;
-    switch (this.n5o_1) {
+    switch (this.f5p_1) {
       case null:
         var tmp1_elvis_lhs = getIndexedValue(this, clazz);
         tmp_0 = tmp1_elvis_lhs == null ? getFirstValue(this, clazz) : tmp1_elvis_lhs;
@@ -662,13 +662,13 @@ protoOf(ParametersHolder).r5o = function (clazz) {
   }
   return tmp;
 };
-protoOf(ParametersHolder).p5o = function () {
-  if (this.o5o_1 < get_lastIndex(this.m5o_1)) {
-    this.o5o_1 = this.o5o_1 + 1 | 0;
+protoOf(ParametersHolder).h5p = function () {
+  if (this.g5p_1 < get_lastIndex(this.e5p_1)) {
+    this.g5p_1 = this.g5p_1 + 1 | 0;
   }
 };
 protoOf(ParametersHolder).toString = function () {
-  return 'DefinitionParameters' + toString_0(toList(this.m5o_1));
+  return 'DefinitionParameters' + toString_0(toList(this.e5p_1));
 };
 function emptyParametersHolder() {
   return new ParametersHolder();
@@ -680,16 +680,16 @@ function _q(name) {
   return new StringQualifier(name);
 }
 function StringQualifier(value) {
-  this.s5o_1 = value;
+  this.k5p_1 = value;
 }
 protoOf(StringQualifier).t = function () {
-  return this.s5o_1;
+  return this.k5p_1;
 };
 protoOf(StringQualifier).toString = function () {
-  return this.s5o_1;
+  return this.k5p_1;
 };
 protoOf(StringQualifier).hashCode = function () {
-  return getStringHashCode(this.s5o_1);
+  return getStringHashCode(this.k5p_1);
 };
 protoOf(StringQualifier).equals = function (other) {
   if (this === other)
@@ -697,49 +697,49 @@ protoOf(StringQualifier).equals = function (other) {
   if (!(other instanceof StringQualifier))
     return false;
   var tmp0_other_with_cast = other instanceof StringQualifier ? other : THROW_CCE();
-  if (!(this.s5o_1 === tmp0_other_with_cast.s5o_1))
+  if (!(this.k5p_1 === tmp0_other_with_cast.k5p_1))
     return false;
   return true;
 };
 function addAllEagerInstances($this, module_0) {
   // Inline function 'kotlin.collections.forEach' call
-  var _iterator__ex2g4s = module_0.e5o_1.j();
+  var _iterator__ex2g4s = module_0.w5o_1.j();
   while (_iterator__ex2g4s.k()) {
     var element = _iterator__ex2g4s.l();
-    var tmp0 = $this.a5m_1;
+    var tmp0 = $this.s5m_1;
     // Inline function 'kotlin.collections.set' call
-    var key = element.k5n_1.hashCode();
+    var key = element.c5o_1.hashCode();
     tmp0.h2(key, element);
   }
 }
 function loadModule($this, module_0, allowOverride) {
   // Inline function 'kotlin.collections.forEach' call
   // Inline function 'kotlin.collections.iterator' call
-  var _iterator__ex2g4s = module_0.f5o_1.r().j();
+  var _iterator__ex2g4s = module_0.x5o_1.r().j();
   while (_iterator__ex2g4s.k()) {
     var element = _iterator__ex2g4s.l();
     // Inline function 'kotlin.collections.component1' call
     var mapping = element.s();
     // Inline function 'kotlin.collections.component2' call
     var factory = element.t();
-    $this.t5o(allowOverride, mapping, factory);
+    $this.l5p(allowOverride, mapping, factory);
   }
 }
 function createEagerInstances($this, instances) {
-  var defaultContext = new ResolutionContext($this.y5l_1.w5l_1, $this.y5l_1.s5l_1.f5m_1, getKClass(NoClass));
+  var defaultContext = new ResolutionContext($this.q5m_1.o5m_1, $this.q5m_1.k5m_1.x5m_1, getKClass(NoClass));
   // Inline function 'kotlin.collections.forEach' call
   var _iterator__ex2g4s = instances.j();
   while (_iterator__ex2g4s.k()) {
     var element = _iterator__ex2g4s.l();
-    element.j5n(defaultContext);
+    element.b5o(defaultContext);
   }
 }
 function InstanceRegistry(_koin) {
-  this.y5l_1 = _koin;
-  this.z5l_1 = KoinPlatformTools_instance.u5o();
-  this.a5m_1 = KoinPlatformTools_instance.u5o();
+  this.q5m_1 = _koin;
+  this.r5m_1 = KoinPlatformTools_instance.m5p();
+  this.s5m_1 = KoinPlatformTools_instance.m5p();
 }
-protoOf(InstanceRegistry).b5m = function (modules, allowOverride) {
+protoOf(InstanceRegistry).t5m = function (modules, allowOverride) {
   // Inline function 'kotlin.collections.forEach' call
   var _iterator__ex2g4s = modules.j();
   while (_iterator__ex2g4s.k()) {
@@ -748,41 +748,41 @@ protoOf(InstanceRegistry).b5m = function (modules, allowOverride) {
     addAllEagerInstances(this, element);
   }
 };
-protoOf(InstanceRegistry).k5m = function () {
+protoOf(InstanceRegistry).c5n = function () {
   // Inline function 'kotlin.collections.toTypedArray' call
-  var this_0 = this.a5m_1.g2();
+  var this_0 = this.s5m_1.g2();
   var tmp$ret$0 = copyToArray(this_0);
   var instances = arrayListOf(tmp$ret$0.slice());
-  this.a5m_1.y1();
+  this.s5m_1.y1();
   createEagerInstances(this, instances);
 };
-protoOf(InstanceRegistry).v5o = function (allowOverride, mapping, factory, logWarning) {
-  if (this.z5l_1.e2(mapping) == null)
+protoOf(InstanceRegistry).n5p = function (allowOverride, mapping, factory, logWarning) {
+  if (this.r5m_1.e2(mapping) == null)
     null;
   else {
     // Inline function 'kotlin.let' call
     if (!allowOverride) {
       overrideError(factory, mapping);
     } else if (logWarning) {
-      this.y5l_1.w5l_1.a5o("(+) override index '" + mapping + "' -> '" + factory.k5n_1.toString() + "'");
+      this.q5m_1.o5m_1.s5o("(+) override index '" + mapping + "' -> '" + factory.c5o_1.toString() + "'");
     }
   }
-  this.y5l_1.w5l_1.j5m("(+) index '" + mapping + "' -> '" + factory.k5n_1.toString() + "'");
+  this.q5m_1.o5m_1.b5n("(+) index '" + mapping + "' -> '" + factory.c5o_1.toString() + "'");
   // Inline function 'kotlin.collections.set' call
-  this.z5l_1.h2(mapping, factory);
+  this.r5m_1.h2(mapping, factory);
 };
-protoOf(InstanceRegistry).t5o = function (allowOverride, mapping, factory, logWarning, $super) {
+protoOf(InstanceRegistry).l5p = function (allowOverride, mapping, factory, logWarning, $super) {
   logWarning = logWarning === VOID ? true : logWarning;
   var tmp;
   if ($super === VOID) {
-    this.v5o(allowOverride, mapping, factory, logWarning);
+    this.n5p(allowOverride, mapping, factory, logWarning);
     tmp = Unit_instance;
   } else {
-    tmp = $super.v5o.call(this, allowOverride, mapping, factory, logWarning);
+    tmp = $super.n5p.call(this, allowOverride, mapping, factory, logWarning);
   }
   return tmp;
 };
-protoOf(InstanceRegistry).w5o = function (clazz, qualifier, scopeQualifier) {
+protoOf(InstanceRegistry).o5p = function (clazz, qualifier, scopeQualifier) {
   // Inline function 'org.koin.core.definition.indexKey' call
   // Inline function 'kotlin.text.buildString' call
   // Inline function 'kotlin.apply' call
@@ -794,27 +794,27 @@ protoOf(InstanceRegistry).w5o = function (clazz, qualifier, scopeQualifier) {
   this_0.c8(_Char___init__impl__6a9atx(58));
   this_0.a8(scopeQualifier);
   var indexKey = this_0.toString();
-  return this.z5l_1.e2(indexKey);
+  return this.r5m_1.e2(indexKey);
 };
-protoOf(InstanceRegistry).x5o = function (qualifier, clazz, scopeQualifier, instanceContext) {
-  var tmp0_safe_receiver = this.w5o(clazz, qualifier, scopeQualifier);
-  var tmp = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.j5n(instanceContext);
+protoOf(InstanceRegistry).p5p = function (qualifier, clazz, scopeQualifier, instanceContext) {
+  var tmp0_safe_receiver = this.o5p(clazz, qualifier, scopeQualifier);
+  var tmp = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.b5o(instanceContext);
   return (tmp == null ? true : !(tmp == null)) ? tmp : null;
 };
-protoOf(InstanceRegistry).p5m = function () {
-  return this.z5l_1.m();
+protoOf(InstanceRegistry).h5n = function () {
+  return this.r5m_1.m();
 };
 function PropertyRegistry(_koin) {
-  this.y5o_1 = _koin;
-  this.z5o_1 = KoinPlatformTools_instance.u5o();
+  this.q5p_1 = _koin;
+  this.r5p_1 = KoinPlatformTools_instance.m5p();
 }
 function loadModule_0($this, module_0) {
-  $this.d5m_1.n(module_0.g5o_1);
+  $this.v5m_1.n(module_0.y5o_1);
 }
 function Companion_1() {
   Companion_instance_1 = this;
-  this.b5n_1 = '_root_';
-  this.c5n_1 = _q('_root_');
+  this.t5n_1 = '_root_';
+  this.u5n_1 = _q('_root_');
 }
 var Companion_instance_1;
 function Companion_getInstance_2() {
@@ -824,18 +824,18 @@ function Companion_getInstance_2() {
 }
 function ScopeRegistry(_koin) {
   Companion_getInstance_2();
-  this.c5m_1 = _koin;
-  this.d5m_1 = KoinPlatformTools_instance.a5p();
-  this.e5m_1 = KoinPlatformTools_instance.u5o();
-  this.f5m_1 = new Scope(Companion_getInstance_2().c5n_1, '_root_', true, this.c5m_1);
-  this.d5m_1.e(this.f5m_1.b5p_1);
-  var tmp0 = this.e5m_1;
-  var tmp2 = this.f5m_1.c5p_1;
+  this.u5m_1 = _koin;
+  this.v5m_1 = KoinPlatformTools_instance.s5p();
+  this.w5m_1 = KoinPlatformTools_instance.m5p();
+  this.x5m_1 = new Scope(Companion_getInstance_2().u5n_1, '_root_', true, this.u5m_1);
+  this.v5m_1.e(this.x5m_1.t5p_1);
+  var tmp0 = this.w5m_1;
+  var tmp2 = this.x5m_1.u5p_1;
   // Inline function 'kotlin.collections.set' call
-  var value = this.f5m_1;
+  var value = this.x5m_1;
   tmp0.h2(tmp2, value);
 }
-protoOf(ScopeRegistry).g5m = function (modules) {
+protoOf(ScopeRegistry).y5m = function (modules) {
   // Inline function 'kotlin.collections.forEach' call
   var _iterator__ex2g4s = modules.j();
   while (_iterator__ex2g4s.k()) {
@@ -847,10 +847,10 @@ function get($this, clazz, qualifier, parameters) {
   return resolveWithOptionalLogging($this, clazz, qualifier, parameters);
 }
 function resolveWithOptionalLogging($this, clazz, qualifier, parameters) {
-  var tmp0 = $this.e5p_1.w5l_1;
+  var tmp0 = $this.w5p_1.o5m_1;
   // Inline function 'org.koin.core.logger.Logger.isAt' call
   var lvl = Level_DEBUG_getInstance();
-  if (!(tmp0.i5m_1.m2(lvl) <= 0)) {
+  if (!(tmp0.a5n_1.m2(lvl) <= 0)) {
     return resolveInstance($this, qualifier, clazz, parameters);
   }
   // Inline function 'org.koin.core.scope.Scope.logInstanceRequest' call
@@ -863,76 +863,76 @@ function resolveWithOptionalLogging($this, clazz, qualifier, parameters) {
   }
   var tmp1_elvis_lhs = tmp;
   var qualifierString = tmp1_elvis_lhs == null ? '' : tmp1_elvis_lhs;
-  var scopeId = $this.d5p_1 ? '' : " - scope:'" + $this.c5p_1 + "'";
-  $this.e5p_1.w5l_1.q5m(Level_DEBUG_getInstance(), "|- '" + getFullName(clazz) + "'" + qualifierString + scopeId + '...');
+  var scopeId = $this.v5p_1 ? '' : " - scope:'" + $this.u5p_1 + "'";
+  $this.w5p_1.o5m_1.i5n(Level_DEBUG_getInstance(), "|- '" + getFullName(clazz) + "'" + qualifierString + scopeId + '...');
   // Inline function 'kotlin.time.measureTimedValue' call
   // Inline function 'kotlin.time.measureTimedValue' call
-  var mark = Monotonic_instance.ne();
+  var mark = Monotonic_instance.qe();
   var result = resolveInstance($this, qualifier, clazz, parameters);
   var result_0 = new TimedValue(result, ValueTimeMark__elapsedNow_impl_eonqvs(mark));
   // Inline function 'org.koin.core.scope.Scope.logInstanceDuration' call
-  var duration = result_0.uk_1;
-  $this.e5p_1.w5l_1.q5m(Level_DEBUG_getInstance(), "|- '" + getFullName(clazz) + "' in " + get_inMs(duration) + ' ms');
-  return result_0.tk_1;
+  var duration = result_0.ml_1;
+  $this.w5p_1.o5m_1.i5n(Level_DEBUG_getInstance(), "|- '" + getFullName(clazz) + "' in " + get_inMs(duration) + ' ms');
+  return result_0.ll_1;
 }
 function resolveInstance($this, qualifier, clazz, parameters) {
   // Inline function 'org.koin.core.scope.Scope.checkScopeIsOpen' call
-  if ($this.j5p_1) {
-    throw new ClosedScopeException("Scope '" + $this.c5p_1 + "' is closed");
+  if ($this.b5q_1) {
+    throw new ClosedScopeException("Scope '" + $this.u5p_1 + "' is closed");
   }
-  var instanceContext = new ResolutionContext($this.e5p_1.w5l_1, $this, clazz, qualifier, parameters);
+  var instanceContext = new ResolutionContext($this.w5p_1.o5m_1, $this, clazz, qualifier, parameters);
   return stackParametersCall($this, parameters, instanceContext);
 }
 function stackParametersCall($this, parameters, instanceContext) {
   if (parameters == null) {
     return resolveFromContext($this, instanceContext);
   }
-  var tmp0 = $this.e5p_1.w5l_1;
+  var tmp0 = $this.w5p_1.o5m_1;
   // Inline function 'org.koin.core.logger.Logger.log' call
   var lvl = Level_DEBUG_getInstance();
   // Inline function 'org.koin.core.logger.Logger.isAt' call
-  if (tmp0.i5m_1.m2(lvl) <= 0) {
+  if (tmp0.a5n_1.m2(lvl) <= 0) {
     var tmp$ret$1 = '| >> parameters ' + toString(parameters);
-    tmp0.q5m(lvl, tmp$ret$1);
+    tmp0.i5n(lvl, tmp$ret$1);
   }
   var stack = onParameterOnStack($this, parameters);
   try {
     return resolveFromContext($this, instanceContext);
   }finally {
-    $this.e5p_1.w5l_1.j5m('| << parameters');
+    $this.w5p_1.o5m_1.b5n('| << parameters');
     clearParameterStack($this, stack);
   }
 }
 function onParameterOnStack($this, parameters) {
   var stack = getOrCreateParameterStack($this);
-  stack.vf(parameters);
+  stack.yf(parameters);
   return stack;
 }
 function clearParameterStack($this, stack) {
-  stack.yf();
+  stack.bg();
   if (stack.p()) {
-    var tmp0_safe_receiver = $this.i5p_1;
+    var tmp0_safe_receiver = $this.a5q_1;
     if (tmp0_safe_receiver == null)
       null;
     else {
       tmp0_safe_receiver.b4();
     }
-    $this.i5p_1 = null;
+    $this.a5q_1 = null;
   }
 }
 function getOrCreateParameterStack($this) {
-  var tmp0_safe_receiver = $this.i5p_1;
-  var tmp1_elvis_lhs = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.tw();
+  var tmp0_safe_receiver = $this.a5q_1;
+  var tmp1_elvis_lhs = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.lx();
   var tmp;
   if (tmp1_elvis_lhs == null) {
     // Inline function 'kotlin.let' call
     var it = ArrayDeque_init_$Create$_0();
-    $this.i5p_1 = new ThreadLocalRef();
-    var tmp0_safe_receiver_0 = $this.i5p_1;
+    $this.a5q_1 = new ThreadLocalRef();
+    var tmp0_safe_receiver_0 = $this.a5q_1;
     if (tmp0_safe_receiver_0 == null)
       null;
     else {
-      tmp0_safe_receiver_0.i5l(it);
+      tmp0_safe_receiver_0.a5m(it);
     }
     tmp = it;
   } else {
@@ -943,27 +943,27 @@ function getOrCreateParameterStack($this) {
 function resolveFromContext($this, instanceContext) {
   // Inline function 'org.koin.core.scope.Scope.resolveFromInjectedParameters' call
   var tmp;
-  if (instanceContext.r5n_1 == null) {
+  if (instanceContext.j5o_1 == null) {
     tmp = null;
   } else {
-    $this.e5p_1.w5l_1.j5m('|- ? ' + instanceContext.s5n_1 + ' look in injected parameters');
-    tmp = instanceContext.r5n_1.r5o(instanceContext.p5n_1);
+    $this.w5p_1.o5m_1.b5n('|- ? ' + instanceContext.k5o_1 + ' look in injected parameters');
+    tmp = instanceContext.j5o_1.j5p(instanceContext.h5o_1);
   }
   var tmp0_elvis_lhs = tmp;
   var tmp1_elvis_lhs = tmp0_elvis_lhs == null ? resolveFromRegistry($this, instanceContext) : tmp0_elvis_lhs;
   var tmp_0;
   if (tmp1_elvis_lhs == null) {
     // Inline function 'org.koin.core.scope.Scope.resolveFromStackedParameters' call
-    var tmp0_safe_receiver = $this.i5p_1;
-    var current = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.tw();
+    var tmp0_safe_receiver = $this.a5q_1;
+    var current = tmp0_safe_receiver == null ? null : tmp0_safe_receiver.lx();
     var tmp_1;
     // Inline function 'kotlin.collections.isNullOrEmpty' call
     if (current == null || current.p()) {
       tmp_1 = null;
     } else {
-      $this.e5p_1.w5l_1.j5m('|- ? ' + instanceContext.s5n_1 + ' look in stack parameters');
-      var parameters = current.uf();
-      tmp_1 = parameters == null ? null : parameters.r5o(instanceContext.p5n_1);
+      $this.w5p_1.o5m_1.b5n('|- ? ' + instanceContext.k5o_1 + ' look in stack parameters');
+      var parameters = current.xf();
+      tmp_1 = parameters == null ? null : parameters.j5p(instanceContext.h5o_1);
     }
     tmp_0 = tmp_1;
   } else {
@@ -975,14 +975,14 @@ function resolveFromContext($this, instanceContext) {
     var tmp$ret$3;
     $l$block: {
       // Inline function 'org.koin.core.scope.Scope.resolveFromScopeSource' call
-      if ($this.d5p_1) {
+      if ($this.v5p_1) {
         tmp$ret$3 = null;
         break $l$block;
       }
-      $this.e5p_1.w5l_1.j5m('|- ? ' + instanceContext.s5n_1 + ' look at scope source');
+      $this.w5p_1.o5m_1.b5n('|- ? ' + instanceContext.k5o_1 + ' look at scope source');
       var tmp_3;
-      if (instanceContext.p5n_1.ta($this.g5p_1) && instanceContext.q5n_1 == null) {
-        var tmp_4 = $this.g5p_1;
+      if (instanceContext.h5o_1.ta($this.y5p_1) && instanceContext.i5o_1 == null) {
+        var tmp_4 = $this.y5p_1;
         tmp_3 = (tmp_4 == null ? true : !(tmp_4 == null)) ? tmp_4 : null;
       } else {
         tmp_3 = null;
@@ -997,8 +997,8 @@ function resolveFromContext($this, instanceContext) {
   var tmp4_elvis_lhs = tmp3_elvis_lhs == null ? resolveFromParentScopes($this, instanceContext) : tmp3_elvis_lhs;
   var tmp_5;
   if (tmp4_elvis_lhs == null) {
-    $this.e5p_1.w5l_1.j5m('|- << parameters');
-    var tmp0_safe_receiver_0 = instanceContext.q5n_1;
+    $this.w5p_1.o5m_1.b5n('|- << parameters');
+    var tmp0_safe_receiver_0 = instanceContext.i5o_1;
     var tmp_6;
     if (tmp0_safe_receiver_0 == null) {
       tmp_6 = null;
@@ -1008,28 +1008,28 @@ function resolveFromContext($this, instanceContext) {
     }
     var tmp1_elvis_lhs_0 = tmp_6;
     var qualifierString = tmp1_elvis_lhs_0 == null ? '' : tmp1_elvis_lhs_0;
-    throw new NoDefinitionFoundException("No definition found for type '" + getFullName(instanceContext.p5n_1) + "'" + qualifierString + '. Check your Modules configuration and add missing type and/or qualifier!');
+    throw new NoDefinitionFoundException("No definition found for type '" + getFullName(instanceContext.h5o_1) + "'" + qualifierString + '. Check your Modules configuration and add missing type and/or qualifier!');
   } else {
     tmp_5 = tmp4_elvis_lhs;
   }
   return tmp_5;
 }
 function resolveFromRegistry($this, ctx) {
-  return $this.e5p_1.t5l_1.x5o(ctx.q5n_1, ctx.p5n_1, $this.b5p_1, ctx);
+  return $this.w5p_1.l5m_1.p5p(ctx.i5o_1, ctx.h5o_1, $this.t5p_1, ctx);
 }
 function resolveFromParentScopes($this, ctx) {
-  $this.e5p_1.w5l_1.j5m('|- ? ' + ctx.s5n_1 + ' look in other scopes');
+  $this.w5p_1.o5m_1.b5n('|- ? ' + ctx.k5o_1 + ' look in other scopes');
   return findInOtherScope($this, ctx);
 }
 function findInOtherScope($this, ctx) {
-  var tmp0 = $this.f5p_1;
+  var tmp0 = $this.x5p_1;
   var tmp$ret$1;
   $l$block: {
     // Inline function 'kotlin.collections.firstNotNullOfOrNull' call
     var _iterator__ex2g4s = tmp0.j();
     while (_iterator__ex2g4s.k()) {
       var element = _iterator__ex2g4s.l();
-      var result = element.k5p(ctx);
+      var result = element.c5q(ctx);
       if (!(result == null)) {
         tmp$ret$1 = result;
         break $l$block;
@@ -1041,30 +1041,30 @@ function findInOtherScope($this, ctx) {
 }
 function Scope(scopeQualifier, id, isRoot, _koin) {
   isRoot = isRoot === VOID ? false : isRoot;
-  this.b5p_1 = scopeQualifier;
-  this.c5p_1 = id;
-  this.d5p_1 = isRoot;
-  this.e5p_1 = _koin;
-  this.f5p_1 = LinkedHashSet_init_$Create$();
-  this.g5p_1 = null;
-  this.h5p_1 = LinkedHashSet_init_$Create$();
-  this.i5p_1 = null;
-  this.j5p_1 = false;
+  this.t5p_1 = scopeQualifier;
+  this.u5p_1 = id;
+  this.v5p_1 = isRoot;
+  this.w5p_1 = _koin;
+  this.x5p_1 = LinkedHashSet_init_$Create$();
+  this.y5p_1 = null;
+  this.z5p_1 = LinkedHashSet_init_$Create$();
+  this.a5q_1 = null;
+  this.b5q_1 = false;
 }
-protoOf(Scope).k5p = function (ctx) {
+protoOf(Scope).c5q = function (ctx) {
   var tmp;
   try {
-    tmp = get(this, ctx.p5n_1, ctx.q5n_1, ctx.r5n_1);
+    tmp = get(this, ctx.h5o_1, ctx.i5o_1, ctx.j5o_1);
   } catch ($p) {
     var tmp_0;
     if ($p instanceof ClosedScopeException) {
       var e = $p;
-      this.e5p_1.w5l_1.j5m('* Scope closed - no instance found for ' + getFullName(ctx.p5n_1) + ' on scope ' + this.toString());
+      this.w5p_1.o5m_1.b5n('* Scope closed - no instance found for ' + getFullName(ctx.h5o_1) + ' on scope ' + this.toString());
       tmp_0 = null;
     } else {
       if ($p instanceof NoDefinitionFoundException) {
         var e_0 = $p;
-        this.e5p_1.w5l_1.j5m("* No instance found for type '" + getFullName(ctx.p5n_1) + "' on scope '" + this.toString() + "'");
+        this.w5p_1.o5m_1.b5n("* No instance found for type '" + getFullName(ctx.h5o_1) + "' on scope '" + this.toString() + "'");
         tmp_0 = null;
       } else {
         throw $p;
@@ -1074,11 +1074,11 @@ protoOf(Scope).k5p = function (ctx) {
   }
   return tmp;
 };
-protoOf(Scope).l5p = function (clazz, qualifier, parameters) {
+protoOf(Scope).d5q = function (clazz, qualifier, parameters) {
   return resolveWithOptionalLogging(this, clazz, qualifier, parameters == null ? null : parameters());
 };
 protoOf(Scope).toString = function () {
-  return "['" + this.c5p_1 + "']";
+  return "['" + this.u5p_1 + "']";
 };
 function get_inMs(_this__u8e3s4) {
   // Inline function 'kotlin.Long.div' call
@@ -1102,7 +1102,7 @@ function getFullName(_this__u8e3s4) {
 }
 function saveCache(_this__u8e3s4) {
   _init_properties_KClassExt_kt__5ro5b2();
-  var name = KoinPlatformTools_instance.m5p(_this__u8e3s4);
+  var name = KoinPlatformTools_instance.e5q(_this__u8e3s4);
   // Inline function 'kotlin.collections.set' call
   get_classNames().h2(_this__u8e3s4, name);
   return name;
@@ -1111,26 +1111,26 @@ var properties_initialized_KClassExt_kt_dizwhw;
 function _init_properties_KClassExt_kt__5ro5b2() {
   if (!properties_initialized_KClassExt_kt_dizwhw) {
     properties_initialized_KClassExt_kt_dizwhw = true;
-    classNames = KoinPlatformTools_instance.u5o();
+    classNames = KoinPlatformTools_instance.m5p();
   }
 }
 function getKClassDefaultName(_this__u8e3s4, kClass) {
   return 'KClass@' + kClass.hashCode();
 }
 function generateId(_this__u8e3s4) {
-  return Companion_getInstance().nl().toString();
+  return Companion_getInstance().fm().toString();
 }
 function register($this, koinApplication) {
-  if (!($this.n5p_1 == null)) {
+  if (!($this.f5q_1 == null)) {
     throw new KoinApplicationAlreadyStartedException('A Koin Application has already been started');
   }
-  $this.n5p_1 = koinApplication.l5m_1;
+  $this.f5q_1 = koinApplication.d5n_1;
 }
 function GlobalContext() {
-  this.n5p_1 = null;
+  this.f5q_1 = null;
 }
-protoOf(GlobalContext).tw = function () {
-  var tmp0_elvis_lhs = this.n5p_1;
+protoOf(GlobalContext).lx = function () {
+  var tmp0_elvis_lhs = this.f5q_1;
   var tmp;
   if (tmp0_elvis_lhs == null) {
     var message = 'KoinApplication has not been started';
@@ -1140,11 +1140,11 @@ protoOf(GlobalContext).tw = function () {
   }
   return tmp;
 };
-protoOf(GlobalContext).o5p = function () {
-  return this.n5p_1;
+protoOf(GlobalContext).g5q = function () {
+  return this.f5q_1;
 };
-protoOf(GlobalContext).s5m = function (appDeclaration) {
-  var koinApplication = Companion_instance.n5m();
+protoOf(GlobalContext).k5n = function (appDeclaration) {
+  var koinApplication = Companion_instance.f5n();
   register(this, koinApplication);
   appDeclaration(koinApplication);
   return koinApplication;
@@ -1155,23 +1155,23 @@ function GlobalContext_getInstance() {
 }
 function KoinPlatformTools() {
 }
-protoOf(KoinPlatformTools).t5n = function (e) {
+protoOf(KoinPlatformTools).l5o = function (e) {
   return e.toString() + toString_0(split(Exception_init_$Create$().toString(), ['\n']));
 };
-protoOf(KoinPlatformTools).m5p = function (kClass) {
+protoOf(KoinPlatformTools).e5q = function (kClass) {
   var tmp0_elvis_lhs = kClass.sa();
   return tmp0_elvis_lhs == null ? getKClassDefaultName(this, kClass) : tmp0_elvis_lhs;
 };
-protoOf(KoinPlatformTools).r5m = function () {
+protoOf(KoinPlatformTools).j5n = function () {
   return GlobalContext_instance;
 };
-protoOf(KoinPlatformTools).y5n = function (lock, block) {
+protoOf(KoinPlatformTools).q5o = function (lock, block) {
   return block();
 };
-protoOf(KoinPlatformTools).u5o = function () {
+protoOf(KoinPlatformTools).m5p = function () {
   return ConcurrentMutableMap_init_$Create$();
 };
-protoOf(KoinPlatformTools).a5p = function () {
+protoOf(KoinPlatformTools).s5p = function () {
   // Inline function 'kotlin.collections.mutableSetOf' call
   return LinkedHashSet_init_$Create$();
 };
