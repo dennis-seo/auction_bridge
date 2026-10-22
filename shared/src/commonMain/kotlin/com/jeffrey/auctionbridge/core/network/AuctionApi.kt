@@ -3,6 +3,8 @@ package com.jeffrey.auctionbridge.core.network
 import com.jeffrey.auctionbridge.core.network.dto.AuctionDetailDto
 import com.jeffrey.auctionbridge.core.network.dto.AuctionListResponse
 import com.jeffrey.auctionbridge.core.network.dto.AuctionStatsResponseDto
+import com.jeffrey.auctionbridge.core.network.dto.BidResultsResponse
+import com.jeffrey.auctionbridge.core.network.dto.RealtySearchResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
@@ -60,6 +62,85 @@ class AuctionApi(
     /** GET /api/v1/auctions/stats — 자산타입/카테고리별 진행 건수 (메인 카드 카운트용). */
     suspend fun getStats(): AuctionStatsResponseDto =
         client.get("${baseUrl.value}/api/v1/auctions/stats").body()
+
+    /**
+     * GET /api/v1/realty — 부동산 목록 검색 (필터 + 정렬 + offset 페이징).
+     *
+     * @param propertyCategories 반복 파라미터 property_category — 빈 리스트면 전체
+     * @param status 진행중만 보려면 "ongoing", 전체면 null
+     * @param sort newest / deadline / price_asc / price_desc / ratio_asc / failed_count
+     */
+    suspend fun searchRealty(
+        propertyCategories: List<String> = emptyList(),
+        regionSido: String? = null,
+        regionSigungu: String? = null,
+        appraisalPriceMin: Long? = null,
+        appraisalPriceMax: Long? = null,
+        minBidPriceMin: Long? = null,
+        minBidPriceMax: Long? = null,
+        failedCountMin: Int? = null,
+        failedCountMax: Int? = null,
+        landSqmsMin: Double? = null,
+        landSqmsMax: Double? = null,
+        bldSqmsMin: Double? = null,
+        bldSqmsMax: Double? = null,
+        status: String? = null,
+        sort: String = "newest",
+        offset: Int = 0,
+        limit: Int = 20,
+    ): RealtySearchResponse {
+        return client.get("${baseUrl.value}/api/v1/realty") {
+            propertyCategories.forEach { parameter("property_category", it) }
+            regionSido?.let { parameter("region_sido", it) }
+            regionSigungu?.let { parameter("region_sigungu", it) }
+            appraisalPriceMin?.let { parameter("appraisal_price_min", it) }
+            appraisalPriceMax?.let { parameter("appraisal_price_max", it) }
+            minBidPriceMin?.let { parameter("min_bid_price_min", it) }
+            minBidPriceMax?.let { parameter("min_bid_price_max", it) }
+            failedCountMin?.let { parameter("failed_count_min", it) }
+            failedCountMax?.let { parameter("failed_count_max", it) }
+            landSqmsMin?.let { parameter("land_sqms_min", it) }
+            landSqmsMax?.let { parameter("land_sqms_max", it) }
+            bldSqmsMin?.let { parameter("bld_sqms_min", it) }
+            bldSqmsMax?.let { parameter("bld_sqms_max", it) }
+            status?.let { parameter("status", it) }
+            parameter("sort", sort)
+            parameter("offset", offset)
+            parameter("limit", limit)
+        }.body()
+    }
+
+    /**
+     * GET /api/v1/bid-results — 매각결과 목록.
+     *
+     * @param result sold / failed / cancelled — null 이면 전체
+     * @param sort opbd_at_desc / ratio_desc / ratio_asc
+     */
+    suspend fun listBidResults(
+        assetType: String? = null,
+        propertyCategories: List<String> = emptyList(),
+        regionSido: String? = null,
+        regionSigungu: String? = null,
+        result: String? = null,
+        opbdFrom: String? = null,
+        opbdTo: String? = null,
+        sort: String = "opbd_at_desc",
+        offset: Int = 0,
+        limit: Int = 20,
+    ): BidResultsResponse {
+        return client.get("${baseUrl.value}/api/v1/bid-results") {
+            assetType?.let { parameter("asset_type", it) }
+            propertyCategories.forEach { parameter("property_category", it) }
+            regionSido?.let { parameter("region_sido", it) }
+            regionSigungu?.let { parameter("region_sigungu", it) }
+            result?.let { parameter("result", it) }
+            opbdFrom?.let { parameter("opbd_from", it) }
+            opbdTo?.let { parameter("opbd_to", it) }
+            parameter("sort", sort)
+            parameter("offset", offset)
+            parameter("limit", limit)
+        }.body()
+    }
 }
 
 internal fun defaultClient(): HttpClient = HttpClient {

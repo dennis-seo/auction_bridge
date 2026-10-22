@@ -32,6 +32,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MainScreen(
     onCategoryClick: (categoryId: String) -> Unit,
+    onSearchClick: () -> Unit,
     viewModel: MainViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -50,6 +51,7 @@ fun MainScreen(
                 isLoggedIn = uiState.isLoggedIn,
                 userName = uiState.userName,
                 onLoginToggle = viewModel::toggleLogin,
+                onSearchClick = onSearchClick,
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) },

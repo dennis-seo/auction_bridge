@@ -7,6 +7,7 @@ import com.jeffrey.auctionbridge.core.network.AuctionApi
 import com.jeffrey.auctionbridge.feature.detail.DetailViewModel
 import com.jeffrey.auctionbridge.feature.main.MainViewModel
 import com.jeffrey.auctionbridge.feature.map.MapViewModel
+import com.jeffrey.auctionbridge.feature.search.SearchViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
@@ -35,6 +36,14 @@ internal val featureModule = module {
         DetailViewModel(
             itemId = itemId,
             auctionRepository = get(),
+        )
+    }
+    factory { (categoryId: String?, tab: String) ->
+        SearchViewModel(
+            categoryId = categoryId,
+            initialTabId = tab,
+            auctionRepository = get(),
+            flags = get(),
         )
     }
 }

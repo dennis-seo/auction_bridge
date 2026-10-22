@@ -27,8 +27,12 @@ import androidx.compose.runtime.remember
 import com.jeffrey.auctionbridge.core.platform.RequestLocationPermissionOnce
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
 import com.jeffrey.auctionbridge.feature.map.components.AuctionMiniCard
@@ -46,6 +50,7 @@ fun MapScreen(
     categoryId: String,
     onBack: () -> Unit,
     onItemClick: (itemId: String) -> Unit,
+    onListClick: () -> Unit,
     viewModel: MapViewModel = koinViewModel { parametersOf(categoryId) },
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -114,6 +119,36 @@ fun MapScreen(
                 .align(Alignment.BottomEnd)
                 .padding(bottom = 32.dp, end = 16.dp),
         )
+
+        // 지도 → 목록 전환 pill — 미니카드(BottomCenter)와 겹치지 않게 선택 중엔 숨김.
+        AnimatedVisibility(
+            visible = uiState.selectedItem == null,
+            enter = fadeIn(),
+            exit = fadeOut(),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 32.dp)
+                .zIndex(10f),
+        ) {
+            Row(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(color = Color(0xE61B2A3F), shape = RoundedCornerShape(24.dp))
+                    .border(width = 1.dp, color = Color(0x33FFFFFF), shape = RoundedCornerShape(24.dp))
+                    .clickable(onClick = onListClick)
+                    .padding(horizontal = 20.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Text(text = "☰", color = Color.White, fontSize = 14.sp)
+                Text(
+                    text = "목록 보기",
+                    color = Color.White,
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                )
+            }
+        }
 
         AnimatedVisibility(
             visible = uiState.selectedItem != null,

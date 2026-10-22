@@ -6,6 +6,8 @@ import com.jeffrey.auctionbridge.core.domain.model.AuctionAssetDetails
 import com.jeffrey.auctionbridge.core.domain.model.AuctionBidOptions
 import com.jeffrey.auctionbridge.core.domain.model.AuctionCodeNames
 import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
+import com.jeffrey.auctionbridge.core.domain.model.AuctionRound
+import com.jeffrey.auctionbridge.core.domain.model.AuctionRoundResult
 import com.jeffrey.auctionbridge.core.domain.model.RightsAnalysisSummary
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -68,6 +70,31 @@ data class AuctionDetailDto(
     val details: AssetDetailsDto? = null,
 
     @SerialName("rights_analysis") val rightsAnalysis: RightsAnalysisSummaryDto? = null,
+
+    /** 회차 이력 — 기본값 emptyList 로 rounds 미지원 구서버 응답과 호환. */
+    val rounds: List<AuctionRoundDto> = emptyList(),
+)
+
+@Serializable
+data class AuctionRoundDto(
+    @SerialName("auction_id") val auctionId: Long? = null,
+    @SerialName("pbct_cdtn_no") val pbctCdtnNo: Long? = null,
+    @SerialName("round_label") val roundLabel: String? = null,
+    val status: String? = null,
+    @SerialName("min_bid_price") val minBidPrice: Long? = null,
+    @SerialName("min_bid_price_text") val minBidPriceText: String? = null,
+    @SerialName("bid_begin_at") val bidBeginAt: String? = null,
+    @SerialName("bid_end_at") val bidEndAt: String? = null,
+    @SerialName("is_current") val isCurrent: Boolean = false,
+    val result: AuctionRoundResultDto? = null,
+)
+
+@Serializable
+data class AuctionRoundResultDto(
+    @SerialName("winning_bid_amount") val winningBidAmount: Long? = null,
+    @SerialName("apsl_scfb_ratio") val apslScfbRatio: Double? = null,
+    @SerialName("valid_bidder_count") val validBidderCount: Int? = null,
+    @SerialName("opbd_at") val opbdAt: String? = null,
 )
 
 @Serializable
@@ -194,6 +221,27 @@ fun AuctionDetailDto.toDomain(): AuctionDetail = AuctionDetail(
     evcRsbyTarget = evcRsbyTarget,
     details = details?.toDomain(),
     rightsAnalysis = rightsAnalysis?.toDomain(),
+    rounds = rounds.map { it.toDomain() },
+)
+
+private fun AuctionRoundDto.toDomain() = AuctionRound(
+    auctionId = auctionId?.toString(),
+    pbctCdtnNo = pbctCdtnNo,
+    roundLabel = roundLabel,
+    status = status,
+    minBidPrice = minBidPrice,
+    minBidPriceText = minBidPriceText,
+    bidBeginAt = bidBeginAt,
+    bidEndAt = bidEndAt,
+    isCurrent = isCurrent,
+    result = result?.let {
+        AuctionRoundResult(
+            winningBidAmount = it.winningBidAmount,
+            apslScfbRatio = it.apslScfbRatio,
+            validBidderCount = it.validBidderCount,
+            opbdAt = it.opbdAt,
+        )
+    },
 )
 
 private fun AuctionCodeNamesDto.toDomain() = AuctionCodeNames(

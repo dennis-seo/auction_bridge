@@ -3,8 +3,10 @@
 package com.jeffrey.auctionbridge.bridge
 
 import com.jeffrey.auctionbridge.core.di.initKoin
+import com.jeffrey.auctionbridge.feature.detail.DetailViewModel
 import com.jeffrey.auctionbridge.feature.main.MainViewModel
 import com.jeffrey.auctionbridge.feature.map.MapViewModel
+import com.jeffrey.auctionbridge.feature.search.SearchViewModel
 import org.koin.core.context.GlobalContext
 import org.koin.core.parameter.parametersOf
 
@@ -30,6 +32,21 @@ class AuctionBridgeApi internal constructor() {
     fun createMapViewModel(categoryId: String): MapViewModelJs {
         val vm = GlobalContext.get().get<MapViewModel> { parametersOf(categoryId) }
         return MapViewModelJs(vm)
+    }
+
+    fun createDetailViewModel(itemId: String): DetailViewModelJs {
+        val vm = GlobalContext.get().get<DetailViewModel> { parametersOf(itemId) }
+        return DetailViewModelJs(vm)
+    }
+
+    /**
+     * 목록 검색 화면 브리지 생성.
+     * @param categoryId 초기 카테고리 필터 ("apartment" 등) — null 이면 전체
+     * @param tab 초기 탭 "ongoing" / "results"
+     */
+    fun createSearchViewModel(categoryId: String?, tab: String): SearchViewModelJs {
+        val vm = GlobalContext.get().get<SearchViewModel> { parametersOf(categoryId, tab) }
+        return SearchViewModelJs(vm)
     }
 }
 

@@ -1,6 +1,7 @@
 package com.jeffrey.auctionbridge.feature.main.components
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,6 +23,7 @@ internal fun MainTopBar(
     isLoggedIn: Boolean,
     userName: String?,
     onLoginToggle: () -> Unit,
+    onSearchClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -50,8 +52,20 @@ internal fun MainTopBar(
                 )
             }
 
-            // 우측: 로그인 버튼
-            Box(modifier = Modifier.align(Alignment.CenterEnd)) {
+            // 우측: 검색 진입 + 로그인 버튼
+            Row(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(
+                    onClick = onSearchClick,
+                    modifier = Modifier.size(44.dp),
+                ) {
+                    Text(
+                        text = "🔍",
+                        fontSize = 18.sp,
+                    )
+                }
                 LoginButton(
                     isLoggedIn = isLoggedIn,
                     userName = userName,

@@ -13,6 +13,18 @@ export {
   type AuctionItemDto,
   type AuctionClusterDto,
   type MarkerGroupDto,
+  type DetailViewModelJs,
+  type DetailUiStateDto,
+  type AuctionDetailDto,
+  type RealtyDetailsDto,
+  type VehicleDetailsDto,
+  type MovableDetailsDto,
+  type RightsAnalysisDto,
+  type AuctionRoundJsDto,
+  type SearchViewModelJs,
+  type SearchUiStateDto,
+  type SearchFilterDto,
+  type SearchItemDto,
 } from "auctionbridge-shared";
 
 import { createAuctionBridge } from "auctionbridge-shared";

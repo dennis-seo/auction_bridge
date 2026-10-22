@@ -62,6 +62,35 @@ data class AuctionDetail(
 
     val details: AuctionAssetDetails?,
     val rightsAnalysis: RightsAnalysisSummary?,
+
+    /** 같은 물건(cltr_mng_no)의 회차 이력 — bid_begin_at 오름차순, 구서버 응답이면 빈 리스트. */
+    val rounds: List<AuctionRound> = emptyList(),
+)
+
+/**
+ * 회차(공매조건) 이력 한 건 — 상세 응답 `rounds[]` 와 1:1 매핑.
+ * [isCurrent] 가 true 면 현재 보고 있는 회차.
+ */
+data class AuctionRound(
+    val auctionId: String?,
+    val pbctCdtnNo: Long?,
+    val roundLabel: String?,
+    val status: String?,
+    val minBidPrice: Long?,
+    val minBidPriceText: String?,
+    val bidBeginAt: String?,
+    val bidEndAt: String?,
+    val isCurrent: Boolean,
+    /** 확정된 개찰 결과 — 없으면 null. */
+    val result: AuctionRoundResult?,
+)
+
+data class AuctionRoundResult(
+    val winningBidAmount: Long?,
+    /** 감정가 대비 낙찰가율 — % 스케일 (75.29 = 75.29%). */
+    val apslScfbRatio: Double?,
+    val validBidderCount: Int?,
+    val opbdAt: String?,
 )
 
 data class AuctionCodeNames(

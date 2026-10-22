@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { List } from "lucide-react";
 import { useMapScreen } from "../shared/hooks";
 import { KakaoMap, type KakaoCluster, type KakaoMarker } from "../components/map/KakaoMap";
 import { AuctionDetailPanel } from "../components/map/AuctionDetailPanel";
@@ -113,6 +114,16 @@ export function MapPage() {
         onZoomIn={() => vm.onZoomIn()}
         onZoomOut={() => vm.onZoomOut()}
       />
+
+      {/* 지도 ↔ 목록 전환 — replace 시맨틱으로 왕복 백스택 누적 방지 (홈→지도 진입 항목은 유지) */}
+      <button
+        type="button"
+        onClick={() => navigate(`/search?category=${categoryId}`, { replace: true })}
+        className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-brand-deepNavy/90 px-5 py-3 text-sm font-semibold text-white shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)] backdrop-blur-sm transition hover:bg-brand-deepNavy"
+      >
+        <List className="h-4 w-4" aria-hidden="true" />
+        목록 보기
+      </button>
 
       {state.isLoadingItems && (
         <div

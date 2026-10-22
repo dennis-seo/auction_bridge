@@ -4,10 +4,14 @@ import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
 import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
 import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
 import com.jeffrey.auctionbridge.core.domain.model.CategoryInfo
+import com.jeffrey.auctionbridge.core.domain.model.RealtySearchPage
 import com.jeffrey.auctionbridge.core.domain.repository.AuctionRepository
 import com.jeffrey.auctionbridge.core.network.AuctionApi
 import com.jeffrey.auctionbridge.core.network.dto.AuctionListItemDto
 import com.jeffrey.auctionbridge.core.network.dto.toDomain
+import com.jeffrey.auctionbridge.feature.search.SearchFilter
+import com.jeffrey.auctionbridge.feature.search.SearchSort
+import com.jeffrey.auctionbridge.feature.search.SearchTab
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -91,6 +95,62 @@ class RemoteAuctionRepository(
         emit(res.items.mapNotNull { it.toDomainOrNull(category) })
     }
 
+    /**
+     * 목록 검색 — 탭에 따라 호출 endpoint 를 분기하고 같은 [RealtySearchPage] 로 매핑.
+     * - ONGOING: GET /api/v1/realty. 진행중/예정 모두 노출을 위해 status 미지정.
+     * - RESULTS: GET /api/v1/bid-results. 서버 필터 어휘가 지역/카테고리만 겹치므로
+     *   가격/유찰/면적 필터는 적용하지 않는다. **mock fallback 하지 않는다** — 실패는 예외 전파.
+     */
+    override suspend fun searchRealty(
+        filter: SearchFilter,
+        sort: SearchSort,
+        tab: SearchTab,
+        offset: Int,
+        limit: Int,
+    ): RealtySearchPage {
+        val categories = filter.categories.mapNotNull { serverPropertyCategory(it) }
+        return when (tab) {
+            SearchTab.ONGOING -> {
+                val res = api.searchRealty(
+                    propertyCategories = categories,
+                    regionSido = filter.regionSido,
+                    regionSigungu = filter.regionSigungu,
+                    minBidPriceMin = filter.minPrice,
+                    minBidPriceMax = filter.maxPrice,
+                    failedCountMin = filter.minFailedCount,
+                    failedCountMax = filter.maxFailedCount,
+                    bldSqmsMin = filter.minAreaSqm,
+                    bldSqmsMax = filter.maxAreaSqm,
+                    status = null,
+                    sort = sort.id,
+                    offset = offset,
+                    limit = limit,
+                )
+                RealtySearchPage(
+                    items = res.items.map { it.toDomain() },
+                    total = res.total,
+                    hasMore = offset + res.items.size < res.total,
+                )
+            }
+            SearchTab.RESULTS -> {
+                val res = api.listBidResults(
+                    assetType = "realty",
+                    propertyCategories = categories,
+                    regionSido = filter.regionSido,
+                    regionSigungu = filter.regionSigungu,
+                    sort = sort.toBidResultsSortId(),
+                    offset = offset,
+                    limit = limit,
+                )
+                RealtySearchPage(
+                    items = res.items.map { it.toDomain() },
+                    total = res.total,
+                    hasMore = offset + res.items.size < res.total,
+                )
+            }
+        }
+    }
+
     private companion object {
         // 임시 기본 영역 — 추후 카메라 bbox 와 연동되면 ViewModel 에서 매번 재호출.
         // 현재 데이터가 전국 분포(대전/광주/김천 등) 라서 한반도 전체를 커버.
@@ -100,16 +160,6 @@ class RemoteAuctionRepository(
             minLat = 33.0,
             maxLat = 39.0,
         )
-
-        fun serverPropertyCategory(category: AuctionCategory): String? = when (category) {
-            AuctionCategory.APARTMENT -> "apartment"
-            AuctionCategory.VILLA -> "villa"
-            AuctionCategory.OFFICE_TEL -> "officetel"
-            AuctionCategory.HOUSE -> "house"
-            AuctionCategory.STORE -> "commercial"
-            AuctionCategory.LAND -> "land"
-            AuctionCategory.CAR -> null // 차량은 asset_type=vehicle (이번 phase 미사용)
-        }
     }
 
     private data class Bbox(
@@ -118,6 +168,30 @@ class RemoteAuctionRepository(
         val minLat: Double,
         val maxLat: Double,
     )
+}
+
+/**
+ * 도메인 카테고리 → 서버 property_category key.
+ * 목록 검색(searchRealty)/지도(getAuctionItems) 가 공유 — 브리지에서도 재사용 가능하도록 internal.
+ */
+internal fun serverPropertyCategory(category: AuctionCategory): String? = when (category) {
+    AuctionCategory.APARTMENT -> "apartment"
+    AuctionCategory.VILLA -> "villa"
+    AuctionCategory.OFFICE_TEL -> "officetel"
+    AuctionCategory.HOUSE -> "house"
+    AuctionCategory.STORE -> "commercial"
+    AuctionCategory.LAND -> "land"
+    AuctionCategory.CAR -> null // 차량은 asset_type=vehicle (이번 phase 미사용)
+}
+
+/**
+ * 통일 정렬 id → /bid-results 정렬 id 변환.
+ * 결과 목록은 개찰일 기준이 기본 — 낙찰가율 정렬만 의미가 겹쳐 매핑하고 나머지는 최신순.
+ */
+private fun SearchSort.toBidResultsSortId(): String = when (this) {
+    SearchSort.RATIO_ASC -> "ratio_asc"
+    SearchSort.PRICE_DESC -> "ratio_desc"
+    else -> "opbd_at_desc"
 }
 
 /**

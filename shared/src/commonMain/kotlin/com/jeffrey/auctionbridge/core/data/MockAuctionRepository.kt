@@ -5,7 +5,11 @@ import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
 import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
 import com.jeffrey.auctionbridge.core.domain.model.CategoryInfo
 import com.jeffrey.auctionbridge.core.domain.model.CategorySpan
+import com.jeffrey.auctionbridge.core.domain.model.RealtySearchPage
 import com.jeffrey.auctionbridge.core.domain.repository.AuctionRepository
+import com.jeffrey.auctionbridge.feature.search.SearchFilter
+import com.jeffrey.auctionbridge.feature.search.SearchSort
+import com.jeffrey.auctionbridge.feature.search.SearchTab
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,6 +38,15 @@ class MockAuctionRepository : AuctionRepository {
 
     /** 카테고리 카운트는 서버 stats 가 권위 — mock 은 빈 맵. */
     override suspend fun getCategoryStats(): Map<AuctionCategory, Int> = emptyMap()
+
+    /** 목록 검색 mock 데이터 없음 — 항상 빈 페이지. 운영 데이터는 [RemoteAuctionRepository] 담당. */
+    override suspend fun searchRealty(
+        filter: SearchFilter,
+        sort: SearchSort,
+        tab: SearchTab,
+        offset: Int,
+        limit: Int,
+    ): RealtySearchPage = RealtySearchPage(items = emptyList(), total = 0, hasMore = false)
 
     /** 매물 상세 mock 합성도 제거. 호출 시 예외 — 운영에서는 RemoteAuctionRepository 가 그대로 surface. */
     override suspend fun getAuctionDetail(id: String): AuctionDetail =

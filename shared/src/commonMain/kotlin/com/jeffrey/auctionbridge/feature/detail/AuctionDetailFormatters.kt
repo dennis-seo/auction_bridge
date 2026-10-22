@@ -1,6 +1,8 @@
 package com.jeffrey.auctionbridge.feature.detail
 
 import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
+import com.jeffrey.auctionbridge.core.domain.model.AuctionRound
+import kotlin.math.roundToInt
 
 /**
  * 상세 화면 표시용 포맷터. 포맷 정책은 [com.jeffrey.auctionbridge.feature.map.AuctionFormatters]
@@ -51,3 +53,51 @@ fun riskLevelLabel(level: Int?): String? = when (level) {
     3 -> "위험"
     else -> null
 }
+
+// ====================================================================
+// 회차 이력(rounds) 포맷터
+// ====================================================================
+
+/** 회차 라벨 — 서버 round_label("3-1") 그대로, 비어 있으면 null. */
+fun AuctionRound.roundLabelDisplay(): String? = roundLabel?.takeIf { it.isNotBlank() }
+
+/** "06/30 ~ 07/02" — 한쪽만 있으면 "06/30 ~" / "~ 07/02", 둘 다 없으면 null. */
+fun AuctionRound.periodText(): String? {
+    val begin = bidBeginAt?.toMonthDayOrNull()
+    val end = bidEndAt?.toMonthDayOrNull()
+    return when {
+        begin != null && end != null -> "$begin ~ $end"
+        begin != null -> "$begin ~"
+        end != null -> "~ $end"
+        else -> null
+    }
+}
+
+/** ISO-8601 앞부분에서 "MM/DD" 추출 — 다른 포맷터들과 같은 substring 파싱 정책. */
+private fun String.toMonthDayOrNull(): String? {
+    if (length < 10) return null
+    return "${substring(5, 7)}/${substring(8, 10)}"
+}
+
+/**
+ * 회차 결과/상태 라벨 — 상세 statusLabel 과 같은 매핑을 표 셀에 맞게 축약.
+ * 알 수 없는 값은 null (UI 에서 뱃지 비표시).
+ */
+fun AuctionRound.resultLabel(): String? = when (status?.lowercase()) {
+    "scheduled" -> "예정"
+    "ongoing" -> "진행중"
+    "sold" -> "낙찰"
+    "failed" -> "유찰"
+    "cancelled", "canceled" -> "취소"
+    else -> null
+}
+
+/** 회차 최저 입찰가 — 텍스트 조건("최고가" 등) 우선, 없으면 억 단위. */
+fun AuctionRound.minBidText(): String? = minBidPriceText ?: minBidPrice.toEokOrNull()
+
+/** 낙찰가 "4.2억" — 확정 결과 없으면 null. */
+fun AuctionRound.saleText(): String? = result?.winningBidAmount.toEokOrNull()
+
+/** "낙찰가율 75%" — apsl_scfb_ratio(% 스케일) 반올림. */
+fun AuctionRound.saleRatioText(): String? =
+    result?.apslScfbRatio?.takeIf { it > 0 }?.let { "낙찰가율 ${it.roundToInt()}%" }

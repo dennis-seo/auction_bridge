@@ -1,5 +1,6 @@
 package com.jeffrey.auctionbridge.feature.detail
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -25,12 +27,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.jeffrey.auctionbridge.core.domain.model.AuctionAssetDetails
 import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
+import com.jeffrey.auctionbridge.core.domain.model.AuctionRound
 import com.jeffrey.auctionbridge.core.domain.model.RightsAnalysisSummary
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
@@ -95,6 +99,7 @@ private fun LoadedContent(detail: AuctionDetail) {
         HeaderCard(detail)
         PriceCard(detail)
         ScheduleCard(detail)
+        if (detail.rounds.isNotEmpty()) RoundsCard(detail.rounds)
         detail.details?.let { AssetDetailsCard(it) }
         detail.rightsAnalysis?.let { RightsAnalysisCard(it) }
     }
@@ -143,6 +148,20 @@ private fun KeyValue(key: String, value: String?) {
 @Composable
 private fun HeaderCard(detail: AuctionDetail) {
     SectionCard(title = detail.assetTypeLabel()) {
+        detail.codeNames.prptDiv?.takeIf { it.isNotBlank() }?.let { prptDiv ->
+            Surface(
+                shape = RoundedCornerShape(999.dp),
+                color = MaterialTheme.colorScheme.secondaryContainer,
+            ) {
+                Text(
+                    text = prptDiv,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 3.dp),
+                )
+            }
+        }
         Text(
             text = detail.title ?: detail.address ?: "(제목 없음)",
             fontSize = 18.sp,
@@ -175,6 +194,97 @@ private fun ScheduleCard(detail: AuctionDetail) {
         KeyValue("입찰 마감", detail.bidEndDisplay())
         if (detail.failedCount > 0) KeyValue("유찰 횟수", "${detail.failedCount}회")
         if (detail.progressCount > 0) KeyValue("진행 회차", "${detail.progressCount}회")
+    }
+}
+
+@Composable
+private fun RoundsCard(rounds: List<AuctionRound>) {
+    SectionCard(title = "회차 이력") {
+        rounds.forEach { round -> RoundRow(round) }
+    }
+}
+
+@Composable
+private fun RoundRow(round: AuctionRound) {
+    val background =
+        if (round.isCurrent) MaterialTheme.colorScheme.primary.copy(alpha = 0.08f)
+        else Color.Transparent
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(background, RoundedCornerShape(10.dp))
+            .padding(horizontal = 10.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(2.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                text = round.roundLabelDisplay() ?: "—",
+                fontSize = 14.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            if (round.isCurrent) {
+                Spacer(Modifier.width(6.dp))
+                Text(
+                    text = "현재",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary,
+                )
+            }
+            Spacer(Modifier.weight(1f))
+            RoundStatusBadge(round)
+        }
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = round.periodText() ?: "—",
+                fontSize = 13.sp,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                text = round.minBidText() ?: "—",
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+        val saleInfo = listOfNotNull(
+            round.saleText()?.let { "낙찰가 $it" },
+            round.saleRatioText(),
+            round.result?.validBidderCount?.takeIf { it > 0 }?.let { "응찰 ${it}명" },
+        ).joinToString(" · ")
+        if (saleInfo.isNotEmpty()) {
+            Text(
+                text = saleInfo,
+                fontSize = 12.sp,
+                fontWeight = FontWeight.Medium,
+                color = Color(0xFF2E7D32),
+            )
+        }
+    }
+}
+
+@Composable
+private fun RoundStatusBadge(round: AuctionRound) {
+    val label = round.resultLabel() ?: return
+    val color = when (round.status?.lowercase()) {
+        "sold" -> Color(0xFF2E7D32)
+        "failed" -> Color(0xFFC62828)
+        "ongoing" -> MaterialTheme.colorScheme.primary
+        else -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+    }
+    Surface(shape = RoundedCornerShape(999.dp), color = color.copy(alpha = 0.12f)) {
+        Text(
+            text = label,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = color,
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 2.dp),
+        )
     }
 }
 

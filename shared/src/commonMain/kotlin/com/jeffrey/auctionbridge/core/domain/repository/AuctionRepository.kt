@@ -4,6 +4,10 @@ import com.jeffrey.auctionbridge.core.domain.model.AuctionCategory
 import com.jeffrey.auctionbridge.core.domain.model.AuctionDetail
 import com.jeffrey.auctionbridge.core.domain.model.AuctionItem
 import com.jeffrey.auctionbridge.core.domain.model.CategoryInfo
+import com.jeffrey.auctionbridge.core.domain.model.RealtySearchPage
+import com.jeffrey.auctionbridge.feature.search.SearchFilter
+import com.jeffrey.auctionbridge.feature.search.SearchSort
+import com.jeffrey.auctionbridge.feature.search.SearchTab
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -30,4 +34,17 @@ interface AuctionRepository {
      * @throws Exception 네트워크/직렬화 오류 — ViewModel 이 잡아 우하단 에러 토스트로 노출.
      */
     suspend fun getCategoryStats(): Map<AuctionCategory, Int>
+
+    /**
+     * 부동산 목록 검색 1페이지 조회.
+     * [tab] 이 [SearchTab.RESULTS] 면 매각결과를 같은 도메인 모델로 매핑해 반환.
+     * @throws Exception 네트워크/직렬화 오류 — ViewModel 측에서 잡아 UI 상태에 반영.
+     */
+    suspend fun searchRealty(
+        filter: SearchFilter,
+        sort: SearchSort,
+        tab: SearchTab,
+        offset: Int,
+        limit: Int,
+    ): RealtySearchPage
 }
